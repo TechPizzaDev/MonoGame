@@ -2,20 +2,18 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 
-using System;
-
 namespace MonoGame.Framework.Graphics
 {
-    public partial class DepthStencilState : GraphicsResource
+    public sealed partial class DepthStencilState : GraphicsResource
     {
-        public static DepthStencilState Default { get; } =
-            new DepthStencilState("DepthStencilState.Default", true, true);
+        public static DepthStencilState Default { get; } = 
+            new("DepthStencilState.Default", true, true);
 
-        public static DepthStencilState DepthRead { get; } =
-            new DepthStencilState("DepthStencilState.DepthRead", true, false);
+        public static DepthStencilState DepthRead { get; } = 
+            new("DepthStencilState.DepthRead", true, false);
 
-        public static DepthStencilState None { get; } =
-            new DepthStencilState("DepthStencilState.None", false, false);
+        public static DepthStencilState None { get; } = 
+            new("DepthStencilState.None", false, false);
 
         private readonly bool _defaultStateObject;
 
@@ -37,6 +35,8 @@ namespace MonoGame.Framework.Graphics
         private bool _twoSidedStencilMode;
 
         #region Properties
+
+        protected override bool IsDefaultStateObject => _defaultStateObject;
 
         public bool DepthBufferEnable
         {
@@ -253,29 +253,6 @@ namespace MonoGame.Framework.Graphics
         }
 
 #endregion
-
-        internal void BindToGraphicsDevice(GraphicsDevice device)
-        {
-            if (_defaultStateObject)
-                throw new InvalidOperationException(
-                    "You cannot bind a default state object.");
-
-            if (GraphicsDevice != null && GraphicsDevice != device)
-                throw new InvalidOperationException(
-                    "This depth stencil state is already bound to a different graphics device.");
-            GraphicsDevice = device;
-        }
-
-        internal void ThrowIfBound()
-        {
-            if (_defaultStateObject)
-                throw new InvalidOperationException(
-                    "You cannot modify a default depth stencil state object.");
-
-            if (GraphicsDevice != null)
-                throw new InvalidOperationException(
-                    "You cannot modify the depth stencil state after it has been bound to the graphics device!");
-        }
 
         internal DepthStencilState Clone()
         {

@@ -49,6 +49,8 @@ namespace MonoGame.Framework.Graphics
         /// </summary>
         protected bool IsValidThreadContext => Threading.IsOnMainThread || SupportsAsync;
 
+        protected virtual bool IsDefaultStateObject => false;
+
         /// <summary>
         /// Gets the <see cref="Graphics.GraphicsDevice"/> assigned to this <see cref="GraphicsResource"/>.
         /// </summary>
@@ -89,6 +91,42 @@ namespace MonoGame.Framework.Graphics
 
         internal GraphicsResource()
         {
+        }
+
+        internal void BindToGraphicsDevice(GraphicsDevice device)
+        {
+            if (IsDefaultStateObject)
+            {
+                Throw();
+                void Throw() => ThrowHelper.InvalidOperation(
+                    $"You cannot bind a default {GetType().Name} object.");
+            }
+
+            if (GraphicsDevice != null && GraphicsDevice != device)
+            {
+                Throw();
+                void Throw() => ThrowHelper.InvalidOperation(
+                    $"This {GetType().Name} is already bound to a different graphics device.");
+            }
+
+            GraphicsDevice = device;
+        }
+
+        internal void ThrowIfBound()
+        {
+            if (IsDefaultStateObject)
+            {
+                Throw();
+                void Throw() => ThrowHelper.InvalidOperation(
+                    $"You cannot modify a default {GetType().Name} object.");
+            }
+
+            if (GraphicsDevice != null)
+            {
+                Throw();
+                void Throw() => ThrowHelper.InvalidOperation(
+                    $"You cannot modify {GetType().Name} after it has been bound to a graphics device.");
+            }
         }
 
         internal void InvokeGraphicsDeviceResetting()

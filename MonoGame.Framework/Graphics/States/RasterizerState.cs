@@ -2,20 +2,18 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 
-using System;
-
 namespace MonoGame.Framework.Graphics
 {
-    public partial class RasterizerState : GraphicsResource
+    public sealed partial class RasterizerState : GraphicsResource
     {
         public static RasterizerState CullClockwise { get; } =
-             new RasterizerState("RasterizerState.CullClockwise", CullMode.CullClockwiseFace);
+             new("RasterizerState.CullClockwise", CullMode.CullClockwiseFace);
 
         public static RasterizerState CullCounterClockwise { get; } = 
-            new RasterizerState("RasterizerState.CullCounterClockwise", CullMode.CullCounterClockwiseFace);
+            new("RasterizerState.CullCounterClockwise", CullMode.CullCounterClockwiseFace);
 
         public static RasterizerState CullNone { get; } =
-            new RasterizerState("RasterizerState.CullNone", CullMode.None);
+            new("RasterizerState.CullNone", CullMode.None);
 
         private readonly bool _defaultStateObject;
 
@@ -28,6 +26,8 @@ namespace MonoGame.Framework.Graphics
         private bool _depthClipEnable;
 
         #region Properties
+
+        protected override bool IsDefaultStateObject => _defaultStateObject;
 
         public CullMode CullMode
         {
@@ -134,30 +134,6 @@ namespace MonoGame.Framework.Graphics
         }
 
         #endregion
-
-        internal void BindToGraphicsDevice(GraphicsDevice device)
-        {
-            if (_defaultStateObject)
-                throw new InvalidOperationException(
-                    "You cannot bind a default state object.");
-
-            if (GraphicsDevice != null && GraphicsDevice != device)
-                throw new InvalidOperationException(
-                    "This rasterizer state is already bound to a different graphics device.");
-
-            GraphicsDevice = device;
-        }
-
-        internal void ThrowIfBound()
-        {
-            if (_defaultStateObject)
-                throw new InvalidOperationException(
-                    "You cannot modify a default rasterizer state object.");
-
-            if (GraphicsDevice != null)
-                throw new InvalidOperationException(
-                    "You cannot modify the rasterizer state after it has been bound to the graphics device!");
-        }
 
         internal RasterizerState Clone()
         {
