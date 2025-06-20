@@ -124,7 +124,7 @@ namespace MonoGame.Framework.Media
             set
             {
                 AssertNotDisposed();
-                PlatformSetPitch(MathHelper.Clamp(value, 0, 2));
+                PlatformSetPitch(Math.Clamp(value, 0, 2));
             }
         }
 

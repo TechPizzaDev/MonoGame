@@ -379,8 +379,8 @@ namespace MonoGame.Framework
                 if (Mouse.State.LeftButton == ButtonState.Pressed)
                 {
                     // Release mouse TouchLocation
-                    var touchX = MathHelper.Clamp(Mouse.State.X, 0, Form.ClientRectangle.Width - 1);
-                    var touchY = MathHelper.Clamp(Mouse.State.Y, 0, Form.ClientRectangle.Height - 1);
+                    var touchX = Math.Clamp(Mouse.State.X, 0, Form.ClientRectangle.Width - 1);
+                    var touchY = Math.Clamp(Mouse.State.Y, 0, Form.ClientRectangle.Height - 1);
                     TouchPanel.AddEvent(0, TouchLocationState.Released, new Vector2(touchX, touchY), true);
                 }
                 return;

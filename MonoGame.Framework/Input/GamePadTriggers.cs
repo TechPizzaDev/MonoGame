@@ -30,8 +30,8 @@ namespace MonoGame.Framework.Input
         /// <param name="rightTrigger">The position of the right trigger, the value will get clamped between 0f and 1f.</param>
         public GamePadTriggers(float leftTrigger, float rightTrigger)
         {
-            Left = MathHelper.Clamp(leftTrigger, 0f, 1f);
-            Right = MathHelper.Clamp(rightTrigger, 0f, 1f);
+            Left = Math.Clamp(leftTrigger, 0f, 1f);
+            Right = Math.Clamp(rightTrigger, 0f, 1f);
         }
 
         #region Equals

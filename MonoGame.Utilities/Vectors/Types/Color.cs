@@ -147,10 +147,10 @@ namespace MonoGame.Framework
         /// <param name="b">Blue component value from 0 to 255.</param>
         /// <param name="a">Alpha component value from 0 to 255.</param>
         public Color(int r, int g, int b, int a) : this(
-            MathHelper.Clamp(r, byte.MinValue, byte.MaxValue),
-            MathHelper.Clamp(g, byte.MinValue, byte.MaxValue),
-            MathHelper.Clamp(b, byte.MinValue, byte.MaxValue),
-            MathHelper.Clamp(a, byte.MinValue, byte.MaxValue))
+            (byte)Math.Clamp(r, byte.MinValue, byte.MaxValue),
+            (byte)Math.Clamp(g, byte.MinValue, byte.MaxValue),
+            (byte)Math.Clamp(b, byte.MinValue, byte.MaxValue),
+            (byte)Math.Clamp(a, byte.MinValue, byte.MaxValue))
         {
         }
 
@@ -165,9 +165,9 @@ namespace MonoGame.Framework
         /// <param name="g">Green component value from 0 to 255.</param>
         /// <param name="b">Blue component value from 0 to 255.</param>
         public Color(int r, int g, int b) : this(
-            MathHelper.Clamp(r, byte.MinValue, byte.MaxValue),
-            MathHelper.Clamp(g, byte.MinValue, byte.MaxValue),
-            MathHelper.Clamp(b, byte.MinValue, byte.MaxValue))
+            (byte)Math.Clamp(r, byte.MinValue, byte.MaxValue),
+            (byte)Math.Clamp(g, byte.MinValue, byte.MaxValue),
+            (byte)Math.Clamp(b, byte.MinValue, byte.MaxValue))
         {
         }
 
@@ -239,9 +239,9 @@ namespace MonoGame.Framework
         /// Constructs <see cref="Color"/> from an <see cref="Color"/> and alpha value.
         /// </summary>
         /// <param name="color">The RGB values.</param>
-        /// <param name="alpha">Alpha component value from 0 to 1.</param>
+        /// <param name="alpha">Alpha component value from 0 to 255.</param>
         public Color(Color color, int alpha) :
-            this(color, MathHelper.Clamp(alpha, byte.MinValue, byte.MaxValue))
+            this(color, (byte)Math.Clamp(alpha, byte.MinValue, byte.MaxValue))
         {
         }
 
@@ -284,7 +284,7 @@ namespace MonoGame.Framework
         /// <param name="color">The RGB values.</param>
         /// <param name="alpha">Alpha component value from 0 to 1.</param>
         public Color(Rgb24 color, int alpha) :
-            this(color, MathHelper.Clamp(alpha, byte.MinValue, byte.MaxValue))
+            this(color, (byte)Math.Clamp(alpha, byte.MinValue, byte.MaxValue))
         {
         }
 
@@ -552,7 +552,7 @@ namespace MonoGame.Framework
         /// <returns>Interpolated <see cref="Color"/>.</returns>
         public static Color Lerp(Color start, Color end, float amount)
         {
-            amount = MathHelper.ClampTruncate(amount, 0, 1);
+            amount = Math.Clamp(amount, 0, 1);
 
             return new Color(
                 (byte)MathHelper.Lerp(start.R, end.R, amount),

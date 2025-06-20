@@ -362,7 +362,7 @@ namespace MonoGame.Framework.Audio
                     }
                 }
 
-                pitch = MathHelper.Clamp(pitch, -1f, 1f);
+                pitch = Math.Clamp(pitch, -1f, 1f);
                 if (volume < 0f)
                     volume = 0f;
 

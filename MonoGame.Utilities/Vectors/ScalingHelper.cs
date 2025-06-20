@@ -199,7 +199,7 @@ namespace MonoGame.Framework.Vectors
         [MethodImpl(ImplOptions)]
         public static sbyte ToInt8(float value)
         {
-            value = MathHelper.Clamp(value, 0, 1);
+            value = Math.Clamp(value, 0, 1);
             value *= byte.MaxValue;
             value += sbyte.MinValue;
             return (sbyte)MathF.Round(value);
@@ -217,7 +217,7 @@ namespace MonoGame.Framework.Vectors
         [MethodImpl(ImplOptions)]
         public static short ToInt16(float value)
         {
-            value = MathHelper.Clamp(value, 0, 1);
+            value = Math.Clamp(value, 0, 1);
             value *= ushort.MaxValue;
             value += short.MinValue;
             return (short)MathF.Round(value);

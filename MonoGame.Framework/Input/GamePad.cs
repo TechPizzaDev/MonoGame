@@ -165,10 +165,10 @@ namespace MonoGame.Framework.Input
 
             return PlatformSetVibration(
                 index, 
-                MathHelper.Clamp(leftMotor, 0f, 1f), 
-                MathHelper.Clamp(rightMotor, 0f, 1f),
-                MathHelper.Clamp(leftTrigger, 0f, 1f), 
-                MathHelper.Clamp(rightTrigger, 0f, 1f));
+                Math.Clamp(leftMotor, 0f, 1f), 
+                Math.Clamp(rightMotor, 0f, 1f),
+                Math.Clamp(leftTrigger, 0f, 1f), 
+                Math.Clamp(rightTrigger, 0f, 1f));
         }
 
         /// <summary>

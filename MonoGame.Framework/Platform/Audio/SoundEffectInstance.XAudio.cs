@@ -224,7 +224,7 @@ namespace MonoGame.Framework.Audio
         {
             // According to XNA documentation:
             // "Panning, ranging from -1.0f (full left) to 1.0f (full right). 0.0f is centered."
-            _pan = MathHelper.Clamp(value, -1.0f, 1.0f);
+            _pan = Math.Clamp(value, -1.0f, 1.0f);
 
             // If we have no voice then nothing more to do.
             if (_voice == null || SoundEffect.MasterVoice == null)
@@ -329,7 +329,7 @@ namespace MonoGame.Framework.Audio
         internal void PlatformSetReverbMix(float mix)
         {
             // At least for XACT we can't go over 2x the volume on the mix.
-            _reverbMix = MathHelper.Clamp(mix, 0, 2);
+            _reverbMix = Math.Clamp(mix, 0, 2);
 
             // If we have no voice then nothing more to do.
             if (_voice == null || SoundEffect.MasterVoice == null)
