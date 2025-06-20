@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace MonoGame.Framework
@@ -159,7 +160,7 @@ namespace MonoGame.Framework
         /// </summary>
         public readonly Size ToSize()
         {
-            return UnsafeR.As<Point, Size>(this);
+            return Unsafe.BitCast<Point, Size>(this);
         }
 
         /// <summary>

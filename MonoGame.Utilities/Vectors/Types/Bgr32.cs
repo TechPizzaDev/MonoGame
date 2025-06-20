@@ -35,7 +35,7 @@ namespace MonoGame.Framework.Vectors
         /// </summary>
         public Bgr24 Bgr
         {
-            readonly get => UnsafeR.As<Bgr32, Bgr24>(this);
+            readonly get => Unsafe.BitCast<Bgr32, Bgr24>(this);
             set => Unsafe.As<Bgr32, Bgr24>(ref this) = value;
         }
 
@@ -69,7 +69,7 @@ namespace MonoGame.Framework.Vectors
             R = (byte)scaledVector.X;
         }
 
-        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.ToVector3());
+        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.AsVector3());
 
         public void FromVector(Vector3 vector) => FromScaledVector(vector);
         public void FromVector(Vector4 vector) => FromScaledVector(vector);

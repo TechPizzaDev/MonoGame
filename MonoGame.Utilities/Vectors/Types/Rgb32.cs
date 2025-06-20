@@ -35,7 +35,7 @@ namespace MonoGame.Framework.Vectors
         /// </summary>
         public Rgb24 Rgb
         {
-            readonly get => UnsafeR.As<Rgb32, Rgb24>(this);
+            readonly get => Unsafe.BitCast<Rgb32, Rgb24>(this);
             set => Unsafe.As<Rgb32, Rgb24>(ref this) = value;
         }
 
@@ -61,7 +61,7 @@ namespace MonoGame.Framework.Vectors
             B = (byte)scaledVector.Z;
         }
 
-        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.ToVector3());
+        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.AsVector3());
 
         public void FromVector(Vector3 vector) => FromScaledVector(vector);
         public void FromVector(Vector4 vector) => FromScaledVector(vector);

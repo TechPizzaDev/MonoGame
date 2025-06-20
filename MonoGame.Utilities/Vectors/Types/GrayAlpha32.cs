@@ -39,7 +39,7 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public uint PackedValue
         {
-            readonly get => UnsafeR.As<GrayAlpha32, uint>(this);
+            readonly get => Unsafe.BitCast<GrayAlpha32, uint>(this);
             set => Unsafe.As<GrayAlpha32, uint>(ref this) = value;
         }
 
@@ -59,7 +59,7 @@ namespace MonoGame.Framework.Vectors
             scaledVector *= ushort.MaxValue;
             scaledVector += new Vector4(0.5f);
 
-            L = (ushort)(PixelHelper.ToGrayF(scaledVector.ToVector3()) + 0.5f);
+            L = (ushort)(PixelHelper.ToGrayF(scaledVector.AsVector3()) + 0.5f);
             A = (ushort)scaledVector.W;
         }
 

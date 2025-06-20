@@ -38,7 +38,7 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public uint PackedValue
         {
-            readonly get => UnsafeR.As<GrayF, uint>(this);
+            readonly get => Unsafe.BitCast<GrayF, uint>(this);
             set => Unsafe.As<GrayF, uint>(ref this) = value;
         }
 
@@ -49,7 +49,7 @@ namespace MonoGame.Framework.Vectors
             L = PixelHelper.ToGrayF(scaledVector);
         }
 
-        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.ToVector3());
+        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.AsVector3());
 
         public void FromVector(Vector3 vector) => FromScaledVector(vector);
         public void FromVector(Vector4 vector) => FromScaledVector(vector);

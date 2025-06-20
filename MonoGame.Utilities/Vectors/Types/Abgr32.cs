@@ -34,8 +34,13 @@ namespace MonoGame.Framework.Vectors
         /// </summary>
         public Bgr24 Bgr
         {
-            readonly get => UnsafeR.As<Abgr32, Bgr24>(UnsafeR.AddByteOffset(this, sizeof(byte)));
-            set => Unsafe.AddByteOffset(ref Unsafe.As<Abgr32, Bgr24>(ref this), (IntPtr)sizeof(byte)) = value;
+            readonly get => new(R, G, B);
+            set
+            {
+                R = value.R;
+                G = value.G;
+                B = value.B;
+            }
         }
 
         #region Constructors
@@ -56,8 +61,8 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public uint PackedValue
         {
-            readonly get => UnsafeR.As<Abgr32, uint>(this);
-            set => Unsafe.As<Abgr32, uint>(ref this) = value;
+            readonly get => Unsafe.BitCast<Abgr32, uint>(this);
+            set => this = Unsafe.BitCast<uint, Abgr32>(value);
         }
 
         public void FromScaledVector(Vector3 scaledVector)

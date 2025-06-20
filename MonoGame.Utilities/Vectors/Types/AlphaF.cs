@@ -55,7 +55,7 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public uint PackedValue
         {
-            readonly get => UnsafeR.As<AlphaF, uint>(this);
+            readonly get => Unsafe.BitCast<AlphaF, uint>(this);
             set => Unsafe.As<AlphaF, uint>(ref this) = value;
         }
 

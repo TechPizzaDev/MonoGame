@@ -41,7 +41,7 @@ namespace MonoGame.Framework.Vectors
         /// </summary>
         public Rgb48 Rgb
         {
-            readonly get => UnsafeR.As<Rgba64, Rgb48>(this);
+            readonly get => Unsafe.BitCast<Rgba64, Rgb48>(this);
             set => Unsafe.As<Rgba64, Rgb48>(ref this) = value;
         }
 
@@ -73,7 +73,7 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public ulong PackedValue
         {
-            readonly get => UnsafeR.As<Rgba64, ulong>(this);
+            readonly get => Unsafe.BitCast<Rgba64, ulong>(this);
             set => Unsafe.As<Rgba64, ulong>(ref this) = value;
         }
 

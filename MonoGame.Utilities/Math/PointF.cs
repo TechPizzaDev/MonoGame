@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace MonoGame.Framework
@@ -69,7 +70,7 @@ namespace MonoGame.Framework
         /// </summary>
         public readonly Vector2 ToVector2()
         {
-            return UnsafeR.As<PointF, Vector2>(this);
+            return Unsafe.BitCast<PointF, Vector2>(this);
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace MonoGame.Framework
         /// </summary>
         public readonly SizeF ToSizeF()
         {
-            return UnsafeR.As<PointF, SizeF>(this);
+            return Unsafe.BitCast<PointF, SizeF>(this);
         }
 
         /// <summary>

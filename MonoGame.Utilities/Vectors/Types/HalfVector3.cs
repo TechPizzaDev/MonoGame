@@ -60,7 +60,7 @@ namespace MonoGame.Framework.Vectors
             Z = (HalfSingle)scaledVector.Z;
         }
 
-        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.ToVector3());
+        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.AsVector3());
 
         public void FromVector(Vector3 vector)
         {
@@ -69,7 +69,7 @@ namespace MonoGame.Framework.Vectors
             Z = (HalfSingle)vector.Z;
         }
 
-        public void FromVector(Vector4 vector) => FromVector(vector.ToVector3());
+        public void FromVector(Vector4 vector) => FromVector(vector.AsVector3());
 
         public readonly Vector3 ToScaledVector3()
         {

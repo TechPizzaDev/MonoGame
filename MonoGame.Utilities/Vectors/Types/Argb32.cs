@@ -34,8 +34,13 @@ namespace MonoGame.Framework.Vectors
         /// </summary>
         public Rgb24 Rgb
         {
-            readonly get => UnsafeR.AddByteOffset(UnsafeR.As<Argb32, Rgb24>(this), sizeof(byte));
-            set => Unsafe.AddByteOffset(ref Unsafe.As<Argb32, Rgb24>(ref this), (IntPtr)sizeof(byte)) = value;
+            readonly get => new(R, G, B);
+            set
+            {
+                R = value.R;
+                G = value.G;
+                B = value.B;
+            }
         }
 
         #region Constructors
@@ -56,7 +61,7 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public uint PackedValue
         {
-            readonly get => UnsafeR.As<Argb32, uint>(this);
+            readonly get => Unsafe.BitCast<Argb32, uint>(this);
             set => Unsafe.As<Argb32, uint>(ref this) = value;
         }
 

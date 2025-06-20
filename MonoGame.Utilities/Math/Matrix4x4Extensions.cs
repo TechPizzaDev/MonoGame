@@ -8,7 +8,7 @@ namespace MonoGame.Framework
     {
         public static void CopyTo(in this Matrix4x4 value, Span<float> destination)
         {
-            MemoryMarshal.Cast<Matrix4x4, float>(UnsafeR.AsReadOnlySpan(value)).CopyTo(destination);
+            MemoryMarshal.AsBytes(new ReadOnlySpan<Matrix4x4>(in value)).CopyTo(MemoryMarshal.AsBytes(destination));
         }
 
         /// <summary>

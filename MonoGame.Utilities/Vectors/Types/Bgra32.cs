@@ -34,7 +34,7 @@ namespace MonoGame.Framework.Vectors
         /// </summary>
         public Bgr24 Bgr
         {
-            readonly get => UnsafeR.As<Bgra32, Bgr24>(this);
+            readonly get => Unsafe.BitCast<Bgra32, Bgr24>(this);
             set => Unsafe.As<Bgra32, Bgr24>(ref this) = value;
         }
 
@@ -62,7 +62,7 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public uint PackedValue
         {
-            readonly get => UnsafeR.As<Bgra32, uint>(this);
+            readonly get => Unsafe.BitCast<Bgra32, uint>(this);
             set => Unsafe.As<Bgra32, uint>(ref this) = value;
         }
 

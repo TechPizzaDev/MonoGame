@@ -71,23 +71,23 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public uint PackedValue
         {
-            readonly get => UnsafeR.As<Short2, uint>(this);
+            readonly get => Unsafe.BitCast<Short2, uint>(this);
             set => Unsafe.As<Short2, uint>(ref this) = value;
         }
 
         public void FromScaledVector(Vector3 scaledVector)
         {
-            var vector = scaledVector.ToVector2();
+            var vector = scaledVector.AsVector2();
             vector *= ushort.MaxValue;
             vector -= Offset2;
 
             Pack(vector, out this);
         }
 
-        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.ToVector3());
+        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.AsVector3());
 
-        public void FromVector(Vector3 vector) => Pack(vector.ToVector2(), out this);
-        public void FromVector(Vector4 vector) => FromVector(vector.ToVector3());
+        public void FromVector(Vector3 vector) => Pack(vector.AsVector2(), out this);
+        public void FromVector(Vector4 vector) => FromVector(vector.AsVector3());
 
         public readonly Vector3 ToScaledVector3()
         {

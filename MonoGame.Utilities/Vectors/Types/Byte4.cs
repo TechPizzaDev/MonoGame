@@ -32,13 +32,13 @@ namespace MonoGame.Framework.Vectors
 
         public Rgb24 Rgb
         {
-            readonly get => UnsafeR.As<Byte4, Rgb24>(this);
+            readonly get => Unsafe.BitCast<Byte4, Rgb24>(this);
             set => Unsafe.As<Byte4, Rgb24>(ref this) = value;
         }
 
         public Color Rgba
         {
-            readonly get => UnsafeR.As<Byte4, Color>(this);
+            readonly get => Unsafe.BitCast<Byte4, Color>(this);
             set => Unsafe.As<Byte4, Color>(ref this) = value;
         }
 
@@ -72,7 +72,7 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public uint PackedValue
         {
-            readonly get => UnsafeR.As<Byte4, uint>(this);
+            readonly get => Unsafe.BitCast<Byte4, uint>(this);
             set => Unsafe.As<Byte4, uint>(ref this) = value;
         }
 

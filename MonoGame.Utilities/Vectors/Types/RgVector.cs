@@ -49,17 +49,17 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public ulong PackedValue
         {
-            readonly get => UnsafeR.As<RgVector, ulong>(this);
-            set => Unsafe.As<RgVector, ulong>(ref this) = value;
+            readonly get => Unsafe.BitCast<RgVector, ulong>(this);
+            set => this = Unsafe.BitCast<ulong, RgVector>(value);
         }
 
-        public void FromScaledVector(Vector3 scaledVector) => Base = scaledVector.ToVector2();
-        public void FromScaledVector(Vector4 scaledVector) => Base = scaledVector.ToVector2();
+        public void FromScaledVector(Vector3 scaledVector) => Base = scaledVector.AsVector2();
+        public void FromScaledVector(Vector4 scaledVector) => Base = scaledVector.AsVector2();
 
         public void FromVector(Vector3 vector) => FromScaledVector(vector);
         public void FromVector(Vector4 vector) => FromScaledVector(vector);
 
-        public readonly Vector3 ToScaledVector3() => Base.ToVector3();
+        public readonly Vector3 ToScaledVector3() => Base.AsVector3();
         public readonly Vector4 ToScaledVector4() => Base.ToVector4();
 
         public readonly Vector3 ToVector3() => ToScaledVector3();
@@ -143,7 +143,7 @@ namespace MonoGame.Framework.Vectors
 
         #endregion
 
-        public static implicit operator RgVector(in Vector2 vector) => UnsafeR.As<Vector2, RgVector>(vector);
-        public static implicit operator Vector2(in RgVector vector) => UnsafeR.As<RgVector, Vector2>(vector);
+        public static implicit operator RgVector(in Vector2 vector) => Unsafe.BitCast<Vector2, RgVector>(vector);
+        public static implicit operator Vector2(in RgVector vector) => Unsafe.BitCast<RgVector, Vector2>(vector);
     }
 }

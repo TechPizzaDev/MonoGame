@@ -46,7 +46,7 @@ namespace MonoGame.Framework.Vectors
             L = (byte)(PixelHelper.ToGrayF(scaledVector) + 0.5f);
         }
 
-        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.ToVector3());
+        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.AsVector3());
 
         public void FromVector(Vector3 vector) => FromScaledVector(vector);
         public void FromVector(Vector4 vector) => FromScaledVector(vector);

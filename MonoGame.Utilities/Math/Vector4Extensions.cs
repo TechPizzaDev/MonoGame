@@ -1,20 +1,23 @@
 ﻿using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics;
 
 namespace MonoGame.Framework
 {
     public static class Vector4Extensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2 ToVector2(in this Vector4 vector)
+        public static Vector4 AddLowerToUpper(this Vector4 rect)
         {
-            return UnsafeR.As<Vector4, Vector2>(vector);
+            Vector128<float> xywh = rect.AsVector128();
+            xywh += Vector128.Shuffle(xywh, Vector128.Create(-1, -1, 0, 1));
+            return xywh.AsVector4();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3 ToVector3(in this Vector4 vector)
+        public static Vector2 GetUpper(this Vector4 vector)
         {
-            return UnsafeR.As<Vector4, Vector3>(vector);
+            return Vector128.Shuffle(vector.AsVector128(), Vector128.Create(2, 3, 0, 1)).AsVector2();
         }
     }
 }

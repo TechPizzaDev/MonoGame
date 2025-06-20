@@ -28,7 +28,7 @@ namespace MonoGame.Framework.Vectors
 
         public RgVector Rg
         {
-            readonly get => UnsafeR.As<RgbVector, RgVector>(this);
+            readonly get => Unsafe.BitCast<RgbVector, RgVector>(this);
             set => Unsafe.As<RgbVector, RgVector>(ref this) = value;
         }
 
@@ -54,7 +54,7 @@ namespace MonoGame.Framework.Vectors
         #region IPackedVector
 
         public void FromScaledVector(Vector3 scaledVector) => Base = scaledVector;
-        public void FromScaledVector(Vector4 scaledVector) => Base = scaledVector.ToVector3();
+        public void FromScaledVector(Vector4 scaledVector) => Base = scaledVector.AsVector3();
 
         public void FromVector(Vector3 vector) => FromScaledVector(vector);
         public void FromVector(Vector4 vector) => FromScaledVector(vector);
@@ -140,7 +140,7 @@ namespace MonoGame.Framework.Vectors
 
         #endregion
 
-        public static implicit operator RgbVector(in Vector3 vector) => UnsafeR.As<Vector3, RgbVector>(vector);
-        public static implicit operator Vector3(in RgbVector vector) => UnsafeR.As<RgbVector, Vector3>(vector);
+        public static implicit operator RgbVector(Vector3 vector) => Unsafe.BitCast<Vector3, RgbVector>(vector);
+        public static implicit operator Vector3(RgbVector vector) => Unsafe.BitCast<RgbVector, Vector3>(vector);
     }
 }

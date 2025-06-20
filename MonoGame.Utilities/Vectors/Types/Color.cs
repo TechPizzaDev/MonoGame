@@ -60,7 +60,7 @@ namespace MonoGame.Framework
         /// </summary>
         public Rgb24 Rgb
         {
-            readonly get => UnsafeR.As<Color, Rgb24>(this);
+            readonly get => Unsafe.BitCast<Color, Rgb24>(this);
             set => Unsafe.As<Color, Rgb24>(ref this) = value;
         }
 
@@ -308,7 +308,7 @@ namespace MonoGame.Framework
         [CLSCompliant(false)]
         public uint PackedValue
         {
-            readonly get => UnsafeR.As<Color, uint>(this);
+            readonly get => Unsafe.BitCast<Color, uint>(this);
             set => Unsafe.As<Color, uint>(ref this) = value;
         }
 
@@ -553,7 +553,7 @@ namespace MonoGame.Framework
         public static Color Lerp(Color start, Color end, float amount)
         {
             amount = Math.Clamp(amount, 0, 1);
-
+            
             return new Color(
                 (byte)MathHelper.Lerp(start.R, end.R, amount),
                 (byte)MathHelper.Lerp(start.G, end.G, amount),

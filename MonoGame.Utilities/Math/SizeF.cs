@@ -67,7 +67,7 @@ namespace MonoGame.Framework
         /// </summary>
         public readonly Vector2 ToVector2()
         {
-            return UnsafeR.As<SizeF, Vector2>(this);
+            return Unsafe.BitCast<SizeF, Vector2>(this);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace MonoGame.Framework
         /// </summary>
         public readonly PointF ToPointF()
         {
-            return UnsafeR.As<SizeF, PointF>(this);
+            return Unsafe.BitCast<SizeF, PointF>(this);
         }
 
         /// <summary>

@@ -75,7 +75,7 @@ namespace MonoGame.Framework
 #if WINDOWS_UAP
                     return SharpDX.DXGI.Format.B4G4R4A4_UNorm;
 #else
-                    return (SharpDX.DXGI.Format)115;
+                    return (SharpDX.DXGI.Format) 115;
 #endif
                 case SurfaceFormat.Dxt1:
                     return SharpDX.DXGI.Format.BC1_UNorm;

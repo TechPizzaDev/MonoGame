@@ -67,7 +67,7 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public ulong PackedValue
         {
-            readonly get => UnsafeR.As<HalfVector4, ulong>(this);
+            readonly get => Unsafe.BitCast<HalfVector4, ulong>(this);
             set => Unsafe.As<HalfVector4, ulong>(ref this) = value;
         }
 

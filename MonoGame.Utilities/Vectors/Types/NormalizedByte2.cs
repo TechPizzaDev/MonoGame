@@ -71,13 +71,13 @@ namespace MonoGame.Framework.Vectors
         [CLSCompliant(false)]
         public ushort PackedValue
         {
-            readonly get => UnsafeR.As<NormalizedByte2, ushort>(this);
+            readonly get => Unsafe.BitCast<NormalizedByte2, ushort>(this);
             set => Unsafe.As<NormalizedByte2, ushort>(ref this) = value;
         }
 
         public void FromScaledVector(Vector3 scaledVector)
         {
-            var raw = scaledVector.ToVector2();
+            var raw = scaledVector.AsVector2();
             raw = VectorHelper.ScaledClamp(raw);
             raw *= byte.MaxValue;
             raw -= Offset;
@@ -86,11 +86,11 @@ namespace MonoGame.Framework.Vectors
             Y = (sbyte)raw.Y;
         }
 
-        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.ToVector3());
+        public void FromScaledVector(Vector4 scaledVector) => FromScaledVector(scaledVector.AsVector3());
         
         public void FromVector(Vector3 vector)
         {
-            var raw = vector.ToVector2();
+            var raw = vector.AsVector2();
             raw = Vector2.Clamp(raw, -Vector2.One, Vector2.One);
             raw *= byte.MaxValue / 2f;
             raw = VectorHelper.Round(raw);
@@ -99,7 +99,7 @@ namespace MonoGame.Framework.Vectors
             Y = (sbyte)raw.Y;
         }
 
-        public void FromVector(Vector4 vector) => FromVector(vector.ToVector3());
+        public void FromVector(Vector4 vector) => FromVector(vector.AsVector3());
 
         public readonly Vector3 ToScaledVector3()
         {
