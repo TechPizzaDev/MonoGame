@@ -4,6 +4,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
 
@@ -11,7 +12,7 @@ namespace MonoGame.Framework.Design
 {
     public class Vector4TypeConverter : TypeConverter
     {
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public override bool CanConvertTo(ITypeDescriptorContext? context, [NotNullWhen(true)] Type? destinationType)
         {
             if (VectorConversion.CanConvertTo(context, destinationType))
                 return true;
@@ -21,7 +22,7 @@ namespace MonoGame.Framework.Design
             return base.CanConvertTo(context, destinationType);
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
         {
             var vec = (Vector4)value;
 
@@ -38,13 +39,13 @@ namespace MonoGame.Framework.Design
                 terms[2] = vec.Z.ToString("R", culture);
                 terms[3] = vec.W.ToString("R", culture);
 
-                return string.Join(culture.TextInfo.ListSeparator + " ", terms);
+                return string.Join(culture?.TextInfo.ListSeparator + " ", terms);
             }
 
             return base.ConvertTo(context, culture, value, destinationType);
         }
 
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         {
             if (sourceType == typeof(string))
                 return true;
@@ -52,7 +53,7 @@ namespace MonoGame.Framework.Design
             return base.CanConvertFrom(context, sourceType);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             var sourceType = value.GetType();
             var vec = Vector4.Zero;
@@ -60,7 +61,7 @@ namespace MonoGame.Framework.Design
             if (sourceType == typeof(string))
             {
                 var str = (string)value;
-                var words = str.Split(culture.TextInfo.ListSeparator.ToCharArray());
+                var words = str.Split(culture?.TextInfo.ListSeparator.ToCharArray());
 
                 vec.X = float.Parse(words[0], culture);
                 vec.Y = float.Parse(words[1], culture);

@@ -69,7 +69,6 @@ namespace MonoGame.Framework.Windows
             Window.OnTextInput(new TextInputEventArgs(rune, nkey));
         }
 
-        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         protected override void WndProc(ref Message m)
         {
             var state = TouchLocationState.Invalid;

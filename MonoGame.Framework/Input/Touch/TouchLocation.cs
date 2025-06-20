@@ -173,7 +173,7 @@ namespace MonoGame.Framework.Input.Touch
         public static bool operator !=(in TouchLocation a, in TouchLocation b) => !(a == b);
 
         public bool Equals(TouchLocation other) => this == other;
-        public override bool Equals(object obj) => obj is TouchLocation other && Equals(other);
+        public override bool Equals(object? obj) => obj is TouchLocation other && Equals(other);
 
         #endregion
 

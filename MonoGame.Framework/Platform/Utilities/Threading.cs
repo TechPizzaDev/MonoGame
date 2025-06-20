@@ -85,7 +85,7 @@ namespace MonoGame.Framework
                 throw new TimeoutException();
         }
 
-        private static List<Action> _actionList = new List<Action>();
+        private static readonly List<Action> _actionList = new();
 
         private static void Add(Action action)
         {

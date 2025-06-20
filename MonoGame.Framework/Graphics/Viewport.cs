@@ -62,7 +62,7 @@ namespace MonoGame.Framework.Graphics
         /// <summary>
         /// Gets or sets a boundary of this <see cref="Viewport"/>.
         /// </summary>
-        public Rectangle Bounds => new Rectangle(X, Y, Width, Height);
+        public Rectangle Bounds => new(X, Y, Width, Height);
 
         /// <summary>
         /// Returns the subset of the viewport that is guaranteed to be visible on a lower quality display.

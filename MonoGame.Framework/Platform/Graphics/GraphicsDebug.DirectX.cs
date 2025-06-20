@@ -10,21 +10,19 @@ namespace MonoGame.Framework.Graphics
     public partial class GraphicsDebug
     {
         private readonly GraphicsDevice _device;
-        private readonly InfoQueue _infoQueue;
+        private readonly InfoQueue? _infoQueue;
         private readonly Queue<GraphicsDebugMessage> _cachedMessages;
-        private bool _hasPushedFilters = false;
 
         public GraphicsDebug(GraphicsDevice device)
         {
             _device = device;
             _infoQueue = _device._d3dDevice.QueryInterfaceOrNull<InfoQueue>();
-            _cachedMessages = new Queue<GraphicsDebugMessage>();
+            _cachedMessages = new();
 
             if (_infoQueue != null)
             {
                 _infoQueue.PushEmptyRetrievalFilter();
                 _infoQueue.PushEmptyStorageFilter();
-                _hasPushedFilters = true;
             }
         }
 

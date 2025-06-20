@@ -264,7 +264,7 @@ namespace MonoGame.Framework.Input
             return this == other;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is GamePadCapabilities other && this == other;
         }

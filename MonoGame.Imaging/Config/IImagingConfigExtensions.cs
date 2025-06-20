@@ -14,7 +14,7 @@ namespace MonoGame.Imaging
         public static T GetModule<T>(this IImagingConfig config)
             where T : class
         {
-            if (!config.TryGetModule<T>(out T? module) || module == null)
+            if (!config.TryGetModule(out T? module) || module == null)
                 throw new MissingImagingModuleException(typeof(T));
             return module;
         }

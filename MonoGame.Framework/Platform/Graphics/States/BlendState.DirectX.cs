@@ -8,7 +8,7 @@ namespace MonoGame.Framework.Graphics
 {
     public partial class BlendState
     {
-        private SharpDX.Direct3D11.BlendState _state;
+        private SharpDX.Direct3D11.BlendState? _state;
 
         protected override void GraphicsDeviceResetting()
         {

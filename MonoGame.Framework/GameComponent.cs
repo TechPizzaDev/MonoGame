@@ -7,8 +7,8 @@ using System;
 namespace MonoGame.Framework
 {
     /// <summary>
-    /// An object that can be attached to a <see cref="Microsoft.Xna.Framework.Game"/> and have its <see cref="Update"/>
-    /// method called when <see cref="Microsoft.Xna.Framework.Game.Update"/> is called.
+    /// An object that can be attached to a <see cref="Game"/> and have its <see cref="Update"/>
+    /// method called when <see cref="Game.Update"/> is called.
     /// </summary>
     public class GameComponent : IComparable<GameComponent>, IGameComponent, IUpdateable, IDisposable
     {

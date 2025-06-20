@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.IO;
 using System.Numerics;
 using MonoGame.Framework.Utilities;
@@ -13,21 +13,21 @@ namespace MonoGame.Framework.Content
 {
     public sealed class ContentReader : BinaryReader
     {
-        private Action<IDisposable> _recordDisposableObject;
-        private ContentTypeReaderManager _typeReaderManager;
-        private List<KeyValuePair<int, Action<object>>> _sharedResourceFixups;
+        private Action<IDisposable>? _recordDisposableObject;
+        private ContentTypeReaderManager? _typeReaderManager;
+        private List<KeyValuePair<int, Action<object>>> _sharedResourceFixups = new();
 
         internal int Version { get; private set; }
         internal int SharedResourceCount { get; private set; }
 
-        internal ContentTypeReader[] TypeReaders { get; private set; }
+        internal ContentTypeReader[]? TypeReaders { get; private set; }
 
         public ContentManager ContentManager { get; }
         public string AssetName { get; }
 
         internal ContentReader(
             ContentManager manager, Stream stream,
-            string assetName, int version, Action<IDisposable> recordDisposableObject)
+            string assetName, int version, Action<IDisposable>? recordDisposableObject)
             : base(stream)
         {
             ContentManager = manager;
@@ -36,12 +36,12 @@ namespace MonoGame.Framework.Content
             _recordDisposableObject = recordDisposableObject;
         }
 
-        internal T ReadAsset<T>()
+        internal T? ReadAsset<T>()
         {
             InitializeTypeReaders();
 
             // Read primary object
-            T result = ReadObject<T>();
+            T? result = ReadObject<T>();
 
             // Read shared resources
             ReadSharedResources();
@@ -49,12 +49,12 @@ namespace MonoGame.Framework.Content
             return result;
         }
 
-        internal T ReadAsset<T>([MaybeNull] T existingInstance)
+        internal T? ReadAsset<T>(T? existingInstance)
         {
             InitializeTypeReaders();
 
             // Read primary object
-            T result = ReadObject(existingInstance);
+            T? result = ReadObject(existingInstance);
 
             // Read shared resources
             ReadSharedResources();
@@ -67,7 +67,6 @@ namespace MonoGame.Framework.Content
             _typeReaderManager = new ContentTypeReaderManager();
             TypeReaders = _typeReaderManager.LoadAssetReaders(this);
             SharedResourceCount = Read7BitEncodedInt();
-            _sharedResourceFixups = new List<KeyValuePair<int, Action<object>>>();
         }
 
         internal void ReadSharedResources()
@@ -82,12 +81,11 @@ namespace MonoGame.Framework.Content
             // Fixup shared resources by calling each registered action
             foreach (var fixup in _sharedResourceFixups)
             {
-                if (fixup.Key != null)
-                    fixup.Value.Invoke(sharedResources[fixup.Key]);
+                fixup.Value.Invoke(sharedResources[fixup.Key]);
             }
         }
 
-        public T ReadExternalReference<T>()
+        public T? ReadExternalReference<T>()
         {
             string externalReference = ReadString();
 
@@ -100,7 +98,7 @@ namespace MonoGame.Framework.Content
 
         private void RecordDisposable<T>(T result)
         {
-            if (!(result is IDisposable disposable))
+            if (result is not IDisposable disposable)
                 return;
 
             if (_recordDisposableObject != null)
@@ -109,69 +107,70 @@ namespace MonoGame.Framework.Content
                 ContentManager.RecordDisposable(disposable);
         }
 
-        public T ReadObject<T>()
+        public T? ReadObject<T>()
         {
             return ReadObject(default(T));
         }
 
-        public T ReadObject<T>([MaybeNull] T existingInstance)
+        public T? ReadObject<T>(T? existingInstance)
         {
             int typeReaderIndex = Read7BitEncodedInt();
             if (typeReaderIndex == 0)
                 return existingInstance;
 
+            Debug.Assert(TypeReaders != null);
             if (typeReaderIndex > TypeReaders.Length)
                 throw new ContentLoadException("Incorrect type reader index found.");
 
             var typeReader = TypeReaders[typeReaderIndex - 1];
-            var result = (T)typeReader.Read(this, existingInstance);
+            var result = (T?) typeReader.Read(this, existingInstance);
 
             RecordDisposable(result);
             return result;
         }
 
-        public T ReadObject<T>(ContentTypeReader typeReader)
+        public T? ReadObject<T>(ContentTypeReader typeReader)
         {
-            var result = (T)typeReader.Read(this, default(T));
+            var result = (T?) typeReader.Read(this, default(T));
             RecordDisposable(result);
             return result;
         }
 
-        public T ReadObject<T>(ContentTypeReader typeReader, T existingInstance)
+        public T? ReadObject<T>(ContentTypeReader typeReader, T existingInstance)
         {
             if (!typeReader.TargetType.IsValueType)
                 return ReadObject(existingInstance);
 
-            T result = (T)typeReader.Read(this, existingInstance);
+            T? result = (T?) typeReader.Read(this, existingInstance);
 
             RecordDisposable(result);
             return result;
         }
 
-        public T ReadRawObject<T>()
+        public T? ReadRawObject<T>()
         {
             return ReadRawObject(default(T));
         }
 
-        public T ReadRawObject<T>(ContentTypeReader typeReader)
+        public T? ReadRawObject<T>(ContentTypeReader typeReader)
         {
             return ReadRawObject<T>(typeReader, default);
         }
 
-        public T ReadRawObject<T>(T existingInstance)
+        public T? ReadRawObject<T>(T? existingInstance)
         {
-            Type objectType = typeof(T);
+            Debug.Assert(TypeReaders != null);
             foreach (var typeReader in TypeReaders)
             {
-                if (typeReader.TargetType == objectType)
+                if (typeReader.TargetType == typeof(T))
                     return ReadRawObject(typeReader, existingInstance);
             }
             throw new NotSupportedException();
         }
 
-        public T ReadRawObject<T>(ContentTypeReader typeReader, T existingInstance)
+        public T? ReadRawObject<T>(ContentTypeReader typeReader, T existingInstance)
         {
-            return (T)typeReader.Read(this, existingInstance);
+            return (T?) typeReader.Read(this, existingInstance);
         }
 
         public void ReadSharedResource<T>(Action<T> fixup)
@@ -183,12 +182,12 @@ namespace MonoGame.Framework.Content
             _sharedResourceFixups.Add(
                 new KeyValuePair<int, Action<object>>(index - 1, delegate (object v)
             {
-                if (!(v is T))
-                    throw new ContentLoadException(string.Format(
-                        "Error loading shared resource. Expected type {0}, received type {1}.",
-                        typeof(T).Name, v.GetType().Name));
-
-                fixup.Invoke((T)v);
+                if (v is not T)
+                {
+                    throw new ContentLoadException(
+                        $"Error loading shared resource. Expected type {typeof(T).Name}, received type {v.GetType().Name}.");
+                }
+                fixup.Invoke((T) v);
             }));
         }
 
@@ -262,11 +261,6 @@ namespace MonoGame.Framework.Content
             var position = ReadVector3();
             var radius = ReadSingle();
             return new BoundingSphere(position, radius);
-        }
-
-        public new int Read7BitEncodedInt()
-        {
-            return base.Read7BitEncodedInt();
         }
 
         #endregion

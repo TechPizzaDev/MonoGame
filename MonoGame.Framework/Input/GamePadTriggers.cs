@@ -42,7 +42,7 @@ namespace MonoGame.Framework.Input
         public static bool operator !=(in GamePadTriggers a, in GamePadTriggers b) => !(a == b);
 
         public bool Equals(GamePadTriggers other) => this == other;
-        public override bool Equals(object obj) => obj is GamePadTriggers other && Equals(other);
+        public override bool Equals(object? obj) => obj is GamePadTriggers other && Equals(other);
 
         #endregion
 

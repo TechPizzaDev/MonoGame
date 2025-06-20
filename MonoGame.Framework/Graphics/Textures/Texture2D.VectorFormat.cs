@@ -4,9 +4,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using MonoGame.Framework.Collections;
 using MonoGame.Framework.Memory;
 using MonoGame.Framework.Vectors;
 
@@ -14,17 +14,13 @@ namespace MonoGame.Framework.Graphics
 {
     public partial class Texture2D
     {
-        private static Dictionary<SurfaceFormat, HashSet<VectorFormat>> VectorFormatBySurface { get; } =
-            new Dictionary<SurfaceFormat, HashSet<VectorFormat>>();
+        private static Dictionary<SurfaceFormat, HashSet<VectorFormat>> VectorFormatBySurface { get; } = new();
 
-        private static Dictionary<SurfaceFormat, ReadOnlySet<VectorFormat>> VectorFormatBySurfaceRO { get; } =
-            new Dictionary<SurfaceFormat, ReadOnlySet<VectorFormat>>();
+        private static Dictionary<SurfaceFormat, ReadOnlySet<VectorFormat>> VectorFormatBySurfaceRO { get; } = new();
 
-        private static Dictionary<Type, HashSet<VectorFormat>> VectorFormatsByType { get; } =
-            new Dictionary<Type, HashSet<VectorFormat>>();
+        private static Dictionary<Type, HashSet<VectorFormat>> VectorFormatsByType { get; } = new();
 
-        private static Dictionary<Type, ReadOnlySet<VectorFormat>> VectorFormatsByTypeRO { get; } =
-            new Dictionary<Type, ReadOnlySet<VectorFormat>>();
+        private static Dictionary<Type, ReadOnlySet<VectorFormat>> VectorFormatsByTypeRO { get; } = new();
 
         private static void InitializeVectorFormats()
         {

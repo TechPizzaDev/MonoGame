@@ -9,7 +9,7 @@ namespace MonoGame.Framework.Graphics
 {
     public partial class DepthStencilState
     {
-        private SharpDX.Direct3D11.DepthStencilState _state;
+        private SharpDX.Direct3D11.DepthStencilState? _state;
 
         protected override void GraphicsDeviceResetting()
         {

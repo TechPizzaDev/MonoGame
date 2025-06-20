@@ -22,7 +22,7 @@ namespace MonoGame.Framework.Media
 
         private float[] _readBuffer;
         private short[]? _castBuffer;
-        internal HashSet<OggStream> _streams;
+        internal readonly HashSet<OggStream> _streams = new();
         private TimeSpan[] _updateTiming;
         private float _updateRate;
 
@@ -54,7 +54,6 @@ namespace MonoGame.Framework.Media
             UpdateRate = updateRate;
 
             _updateTiming = new TimeSpan[(int)Math.Max(1, UpdateRate)];
-            _streams = new HashSet<OggStream>();
 
             _readBuffer = new float[BufferSize];
             if (!Controller.SupportsFloat32)
@@ -194,6 +193,7 @@ namespace MonoGame.Framework.Media
         {
             AL.GetSource(stream.SourceId, ALGetSourcei.BuffersProcessed, out int processed);
             ALHelper.CheckError("Failed to fetch processed buffers.");
+
             if (processed > 0)
             {
                 AL.SourceUnqueueBuffers(stream.SourceId, processed);

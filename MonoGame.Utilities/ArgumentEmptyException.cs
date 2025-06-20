@@ -15,11 +15,11 @@ namespace MonoGame.Framework
         {
         }
 
-        public ArgumentEmptyException(string paramName) : base(string.Empty, paramName)
+        public ArgumentEmptyException(string? paramName) : base(string.Empty, paramName)
         {
         }
 
-        public ArgumentEmptyException(string message, Exception inner) : base(message, inner)
+        public ArgumentEmptyException(string? message, Exception inner) : base(message, inner)
         {
         }
 

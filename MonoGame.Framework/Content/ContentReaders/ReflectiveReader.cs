@@ -15,9 +15,9 @@ namespace MonoGame.Framework.Content
     {
         delegate void ReadElement(ContentReader input, object parent);
 
-        private List<ReadElement> _readers;
-        private ConstructorInfo _constructor;
-        private ContentTypeReader _baseTypeReader;
+        private List<ReadElement>? _readers;
+        private ConstructorInfo? _constructor;
+        private ContentTypeReader? _baseTypeReader;
 
 
         public ReflectiveReader()  : base(typeof(T))
@@ -57,7 +57,7 @@ namespace MonoGame.Framework.Content
             }
         }
 
-        private static ReadElement GetElementReader(ContentTypeReaderManager manager, MemberInfo member)
+        private static ReadElement? GetElementReader(ContentTypeReaderManager manager, MemberInfo member)
         {
             var property = member as PropertyInfo;
             var field = member as FieldInfo;
@@ -149,7 +149,8 @@ namespace MonoGame.Framework.Content
 
             // We use the construct delegate to pick the correct existing 
             // object to be the target of deserialization.
-            Func<object, object> construct = parent => null;
+            Func<object, object?> construct = parent => null;
+
             if (property != null && !property.CanWrite)
                 construct = parent => property.GetValue(parent, null);
 
@@ -161,20 +162,24 @@ namespace MonoGame.Framework.Content
             };
         }
       
-        protected internal override object Read(ContentReader input, object existingInstance)
+        protected internal override object? Read(ContentReader input, object? existingInstance)
         {
             T obj;
             if (existingInstance != null)
-                obj = (T)existingInstance;
+            {
+                obj = (T) existingInstance;
+            }
             else
-                obj = _constructor == null 
-                    ? Activator.CreateInstance<T>() 
-                    : (T)_constructor.Invoke(null);
-        
-            if(_baseTypeReader != null)
-                _baseTypeReader.Read(input, obj);
+            {
+                obj = _constructor == null
+                    ? Activator.CreateInstance<T>()
+                    : (T) _constructor.Invoke(null);
+            }
+            _baseTypeReader?.Read(input, obj);
 
-            var boxed = (object)obj; // Box the type once.
+            Debug.Assert(_readers != null);
+
+            var boxed = (object?)obj; // Box the type once.
             foreach (var reader in _readers)
                 reader.Invoke(input, boxed);
 

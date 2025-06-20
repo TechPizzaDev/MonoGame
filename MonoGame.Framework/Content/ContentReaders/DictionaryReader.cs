@@ -2,20 +2,15 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 
-using System;
 using System.Collections.Generic;
-using MonoGame.Framework.Utilities;
 
 namespace MonoGame.Framework.Content
 {
-
     internal class DictionaryReader<TKey, TValue> : ContentTypeReader<Dictionary<TKey, TValue>>
+        where TKey : notnull
     {
-        ContentTypeReader keyReader;
-        ContentTypeReader valueReader;
-        
-        Type keyType;
-        Type valueType;
+        ContentTypeReader? keyReader;
+        ContentTypeReader? valueReader;
         
         public DictionaryReader()
         {
@@ -23,11 +18,8 @@ namespace MonoGame.Framework.Content
 
         protected internal override void Initialize(ContentTypeReaderManager manager)
         {
-            keyType = typeof(TKey);
-            valueType = typeof(TValue);
-            
-            keyReader = manager.GetTypeReader(keyType);
-            valueReader = manager.GetTypeReader(valueType);
+            keyReader = manager.GetTypeReader(typeof(TKey));
+            valueReader = manager.GetTypeReader(typeof(TValue));
         }
 
         public override bool CanDeserializeIntoExistingObject => true;
@@ -44,10 +36,10 @@ namespace MonoGame.Framework.Content
 
             for (int i = 0; i < count; i++)
             {
-                TKey key;
-                TValue value;
+                TKey? key;
+                TValue? value;
 
-                if (keyType.IsValueType)
+                if (typeof(TKey).IsValueType)
                 {
                     key = input.ReadObject<TKey>(keyReader);
                 }
@@ -57,7 +49,7 @@ namespace MonoGame.Framework.Content
                     key = readerType > 0 ? input.ReadObject<TKey>(input.TypeReaders[readerType - 1]) : default;
                 }
 
-                if (valueType.IsValueType)
+                if (typeof(TValue).IsValueType)
                 {
                     value = input.ReadObject<TValue>(valueReader);
                 }

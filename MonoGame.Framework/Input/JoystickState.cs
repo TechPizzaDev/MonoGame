@@ -78,7 +78,7 @@ namespace MonoGame.Framework.Input
         public static bool operator !=(in JoystickState a, in JoystickState b) => !(a == b);
 
         public bool Equals(JoystickState other) => this == other;
-        public override bool Equals(object obj) => obj is JoystickState other && Equals(other);
+        public override bool Equals(object? obj) => obj is JoystickState other && Equals(other);
 
         #endregion
 

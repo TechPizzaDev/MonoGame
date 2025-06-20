@@ -9,11 +9,11 @@ namespace MonoGame.Framework.Content
     /// </summary>
     internal class ExternalReferenceReader : ContentTypeReader
     {
-        public ExternalReferenceReader() : base(null)
+        public ExternalReferenceReader() : base(typeof(object))
         {
         }
 
-        protected internal override object Read(ContentReader input, object existingInstance)
+        protected internal override object? Read(ContentReader input, object? existingInstance)
         {
             return input.ReadExternalReference<object>();
         }

@@ -6,8 +6,7 @@ namespace MonoGame.Framework.Graphics
 {
     public class EffectParameterCollection : IReadOnlyList<EffectParameter>
     {
-        internal static readonly EffectParameterCollection Empty =
-            new EffectParameterCollection(Array.Empty<EffectParameter>());
+        internal static readonly EffectParameterCollection Empty = new(Array.Empty<EffectParameter>());
 
         private readonly EffectParameter[] _parameters;
         private readonly Dictionary<string, int> _indexLookup;
@@ -16,7 +15,7 @@ namespace MonoGame.Framework.Graphics
 
         public EffectParameter this[int index] => _parameters[index];
 
-        public EffectParameter this[string name]
+        public EffectParameter? this[string name]
         {
             get
             {

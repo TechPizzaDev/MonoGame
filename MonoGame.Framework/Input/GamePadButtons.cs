@@ -96,7 +96,7 @@ namespace MonoGame.Framework.Input
         public static bool operator !=(GamePadButtons a, GamePadButtons b) => a._buttons != b._buttons;
 
         public bool Equals(GamePadButtons other) => this == other;
-        public override bool Equals(object obj) => obj is GamePadButtons other && Equals(other);
+        public override bool Equals(object? obj) => obj is GamePadButtons other && Equals(other);
 
         #endregion
 

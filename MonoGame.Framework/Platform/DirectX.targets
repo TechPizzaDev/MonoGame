@@ -28,7 +28,7 @@
     <Compile Include="Platform\Graphics\Textures\Texture3D.DirectX.cs" />
     <Compile Include="Platform\Graphics\Textures\TextureCollection.DirectX.cs" />
     <Compile Include="Platform\Graphics\Textures\TextureCube.DirectX.cs" />
-	<Compile Include="Platform\Graphics\Textures\SwapChainRenderTarget.DirectX.cs" />
+	  <Compile Include="Platform\Graphics\Textures\SwapChainRenderTarget.DirectX.cs" />
     <Compile Include="Platform\Graphics\Primitives\ImmutableVertexInputLayout.cs" />
     <Compile Include="Platform\Graphics\Primitives\IndexBuffer.DirectX.cs" />
     <Compile Include="Platform\Graphics\Primitives\InputLayoutCache.cs" />

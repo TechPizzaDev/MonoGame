@@ -21,7 +21,7 @@ namespace MonoGame.Imaging
     {
         private static object RegistrationMutex { get; } = new object();
 
-        private static HashSet<ImageFormat> _formats = new HashSet<ImageFormat>();
+        private static HashSet<ImageFormat> _formats = new();
         private static FormatDictionary _byMimeType = new FormatDictionary(StringComparer.OrdinalIgnoreCase);
         private static FormatDictionary _byExtension = new FormatDictionary(StringComparer.OrdinalIgnoreCase);
 

@@ -7,15 +7,12 @@ namespace MonoGame.Framework.Collections
     {
         private static ReadOnlyList<T>? _empty;
 
-        public static ReadOnlyList<T> Empty
+        public static new ReadOnlyList<T> Empty
         {
             get
             {
-                if (_empty == null)
-                {
-                    // we don't care about threading; concurrency can only cause some extra allocs here
-                    _empty = new ReadOnlyList<T>(new List<T>());
-                }
+                // we don't care about threading; concurrency can only cause some extra allocs here
+                _empty ??= new ReadOnlyList<T>(new List<T>());
                 return _empty;
             }
         }

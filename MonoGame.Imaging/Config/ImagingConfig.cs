@@ -15,7 +15,7 @@ namespace MonoGame.Imaging
 {
     public class ImagingConfig : IImagingConfig
     {
-        private Dictionary<Type, object> _modules;
+        private readonly Dictionary<Type, object> _modules = new();
 
         /// <summary>
         /// Gets the default <see cref="ImagingConfig"/>,
@@ -89,7 +89,7 @@ namespace MonoGame.Imaging
         {
             if (_modules.TryGetValue(typeof(T), out object? obj))
             {
-                value = (T)obj;
+                value = (T) obj;
                 return true;
             }
             value = default;

@@ -64,7 +64,7 @@ namespace MonoGame.Framework.Graphics
         /// <see langword="true"/> if the specified <see cref="object"/> is equal to this instance;
         /// otherwise, <see langword="false"/>.
         /// </returns>
-        public override bool Equals(object obj) => Equals(obj as VertexInputLayout);
+        public override bool Equals(object? obj) => Equals(obj as VertexInputLayout);
 
         /// <summary>
         /// Determines whether the specified <see cref="VertexInputLayout"/> is equal to this
@@ -75,7 +75,7 @@ namespace MonoGame.Framework.Graphics
         /// <see langword="true"/> if the specified <see cref="VertexInputLayout"/> is equal to this
         /// instance; otherwise, <see langword="false"/>.
         /// </returns>
-        public bool Equals(VertexInputLayout other)
+        public bool Equals(VertexInputLayout? other)
         {
             if (other == null)
                 return false;
@@ -88,7 +88,7 @@ namespace MonoGame.Framework.Graphics
 
             for (int i = 0; i < Count; i++)
             {
-                Debug.Assert(VertexDeclarations[i] != null);
+                Debug.Assert(VertexDeclarations[i] != null!);
                 if (!VertexDeclarations[i].Equals(other.VertexDeclarations[i]))
                     return false;
             }
@@ -128,7 +128,7 @@ namespace MonoGame.Framework.Graphics
         /// <see langword="true"/> if the <paramref name="left"/> and <paramref name="right"/> are
         /// the same; otherwise, <see langword="false"/>.
         /// </returns>
-        public static bool operator ==(VertexInputLayout left, VertexInputLayout right) => Equals(left, right);
+        public static bool operator ==(VertexInputLayout? left, VertexInputLayout? right) => Equals(left, right);
 
         /// <summary>
         /// Compares two <see cref="VertexInputLayout"/> instances to determine whether they are different.
@@ -139,6 +139,6 @@ namespace MonoGame.Framework.Graphics
         /// <see langword="true"/> if the <paramref name="left"/> and <paramref name="right"/> are
         /// the different; otherwise, <see langword="false"/>.
         /// </returns>
-        public static bool operator !=(VertexInputLayout left, VertexInputLayout right) => !Equals(left, right);
+        public static bool operator !=(VertexInputLayout? left, VertexInputLayout? right) => !Equals(left, right);
     }
 }

@@ -22,8 +22,7 @@ namespace MonoGame.Framework.Media
 
         private bool _leaveStreamOpen;
         private Stream _stream;
-        private uint _alFilterId;
-        private Queue<ALBuffer> _queuedBuffers;
+        private readonly Queue<ALBuffer> _queuedBuffers = new();
 
         private float _volume;
         private float _pitch;
@@ -70,7 +69,6 @@ namespace MonoGame.Framework.Media
             OnFinished = onFinished;
             OnLooped = onLooped;
 
-            _queuedBuffers = new Queue<ALBuffer>();
             SourceId = Streamer.Controller.ReserveSource();
 
             Volume = 1;

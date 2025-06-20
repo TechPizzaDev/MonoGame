@@ -25,7 +25,7 @@ namespace MonoGame.Framework.Graphics
                 // Build the description.
                 var desc = new SharpDX.Direct3D11.RasterizerStateDescription();
 
-                switch ( CullMode )
+                switch (CullMode)
                 {
                     case CullMode.CullClockwiseFace:
                         desc.CullMode = SharpDX.Direct3D11.CullMode.Front;

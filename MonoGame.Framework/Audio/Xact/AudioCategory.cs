@@ -79,7 +79,7 @@ namespace MonoGame.Framework.Audio
             return sum;
         }
 
-        internal XactSound GetOldestInstance()
+        internal XactSound? GetOldestInstance()
         {
             for (var i = 0; i < _sounds.Count; i++)
             {
@@ -154,14 +154,14 @@ namespace MonoGame.Framework.Audio
         /// <summary>
         /// Determines whether two <see cref="AudioCategory"/> instances are equal.
         /// </summary>
-        public bool Equals(AudioCategory other) => this == other;
+        public bool Equals(AudioCategory? other) => this == other;
 
         /// <summary>
         /// Determines whether two <see cref="AudioCategory"/> instances are equal.
         /// </summary>
         /// <param name="obj">Object to compare with this instance.</param>
         /// <returns>true if the objects are equal or false if they aren't.</returns>
-        public override bool Equals(object obj) => obj is AudioCategory other && Equals(other);
+        public override bool Equals(object? obj) => obj is AudioCategory other && Equals(other);
 
         /// <summary>
         /// Returns the friendly name of this <see cref="AudioCategory"/>.

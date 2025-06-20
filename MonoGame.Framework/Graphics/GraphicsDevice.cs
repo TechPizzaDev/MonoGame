@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -70,31 +72,29 @@ namespace MonoGame.Framework.Graphics
         private static Vector4 DiscardColor { get; } = new Color(0, 0, 0, 0).ToScaledVector4();
 #endif
 
-        private Shader _vertexShader;
-        private Shader _pixelShader;
+        private Shader? _vertexShader;
+        private Shader? _pixelShader;
 
-        private readonly ConstantBufferCollection _vertexConstantBuffers =
-            new ConstantBufferCollection(ShaderStage.Vertex, 16);
+        private readonly ConstantBufferCollection _vertexConstantBuffers = new(ShaderStage.Vertex, 16);
 
-        private readonly ConstantBufferCollection _pixelConstantBuffers =
-            new ConstantBufferCollection(ShaderStage.Pixel, 16);
+        private readonly ConstantBufferCollection _pixelConstantBuffers = new(ShaderStage.Pixel, 16);
 
         /// <summary>
         /// The cache of effects from unique byte streams.
         /// </summary>
-        internal Dictionary<int, Effect> EffectCache;
+        internal Dictionary<int, Effect> EffectCache { get; } = new();
 
         /// <summary>
         /// Resources may be added to and removed from the list from many threads.
         /// </summary>
-        private object ResourcesLock { get; } = new object();
+        private object ResourcesLock { get; } = new();
 
         /// <summary>
         /// Use <see cref="WeakReference"/> for the global resources list as we do not know when
         /// a resource may be disposed and collected. We do not want to prevent a resource from
         /// being collected by holding a strong reference to it in this list.
         /// </summary>
-        private readonly List<WeakReference> _resources = new List<WeakReference>();
+        private readonly List<WeakReference> _resources = new();
 
         internal GraphicsMetrics _graphicsMetrics;
 
@@ -160,7 +160,7 @@ namespace MonoGame.Framework.Graphics
 
         public IndexBuffer? Indices { set => SetIndexBuffer(value); get => _indexBuffer; }
 
-        internal Shader VertexShader
+        internal Shader? VertexShader
         {
             get => _vertexShader;
             set
@@ -174,7 +174,7 @@ namespace MonoGame.Framework.Graphics
             }
         }
 
-        internal Shader PixelShader
+        internal Shader? PixelShader
         {
             get => _pixelShader;
             set
@@ -238,6 +238,8 @@ namespace MonoGame.Framework.Graphics
         public BlendState BlendState
         {
             get => _blendState;
+            [MemberNotNull(nameof(_blendState))]
+            [MemberNotNull(nameof(_actualBlendState))]
             set
             {
                 if (value == null)
@@ -245,6 +247,8 @@ namespace MonoGame.Framework.Graphics
 
                 // Don't set the same state twice!
                 if (_blendState == value)
+                {
+                    Debug.Assert(_actualBlendState != null);
                     return;
 
                 _blendState = value;
@@ -276,6 +280,8 @@ namespace MonoGame.Framework.Graphics
         public DepthStencilState DepthStencilState
         {
             get => _depthStencilState;
+            [MemberNotNull(nameof(_depthStencilState))]
+            [MemberNotNull(nameof(_actualDepthStencilState))]
             set
             {
                 if (value == null)
@@ -283,7 +289,10 @@ namespace MonoGame.Framework.Graphics
 
                 // Don't set the same state twice!
                 if (_depthStencilState == value)
+                {
+                    Debug.Assert(_actualDepthStencilState != null);
                     return;
+                }
 
                 _depthStencilState = value;
 
@@ -308,6 +317,8 @@ namespace MonoGame.Framework.Graphics
         public RasterizerState RasterizerState
         {
             get => _rasterizerState;
+            [MemberNotNull(nameof(_rasterizerState))]
+            [MemberNotNull(nameof(_actualRasterizerState))]
             set
             {
                 if (value == null)
@@ -315,7 +326,10 @@ namespace MonoGame.Framework.Graphics
 
                 // Don't set the same state twice!
                 if (_rasterizerState == value)
+                {
+                    Debug.Assert(_actualRasterizerState != null);
                     return;
+                }
 
                 if (!value.DepthClipEnable && !Capabilities.SupportsDepthClamp)
                     throw new InvalidOperationException(
@@ -358,18 +372,11 @@ namespace MonoGame.Framework.Graphics
 
         #region Constructors
 
-        internal GraphicsDevice()
+        internal GraphicsDevice() : this(
+            GraphicsAdapter.DefaultAdapter,
+            GraphicsProfile.Reach,
+            new PresentationParameters { DepthStencilFormat = DepthFormat.Depth24 })
         {
-            PresentationParameters = new PresentationParameters
-            {
-                DepthStencilFormat = DepthFormat.Depth24
-            };
-            Setup();
-
-            Capabilities = new GraphicsCapabilities();
-            Capabilities.Initialize(this);
-
-            Initialize();
         }
 
         /// <summary>
@@ -379,30 +386,24 @@ namespace MonoGame.Framework.Graphics
         /// <param name="graphicsProfile">The graphics profile.</param>
         /// <param name="presentationParameters">The presentation options.</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="presentationParameters"/> is <see langword="null"/>.
+        ///     <paramref name="presentationParameters"/> is <see langword="null"/>.
         /// </exception>
         public GraphicsDevice(
             GraphicsAdapter adapter, GraphicsProfile graphicsProfile, PresentationParameters presentationParameters)
         {
             Adapter = adapter ?? throw new ArgumentNullException(nameof(adapter));
+
             if (!adapter.IsProfileSupported(graphicsProfile))
+            {
                 throw new NoSuitableGraphicsDeviceException(
-                    $"Adapter '{ adapter.Description}' does not support the {graphicsProfile} profile.");
+                    $"Adapter '{adapter.Description}' does not support the {graphicsProfile} profile.");
+            }
 
             PresentationParameters = presentationParameters ??
                 throw new ArgumentNullException(nameof(presentationParameters));
 
             GraphicsProfile = graphicsProfile;
-            Setup();
 
-            Capabilities = new GraphicsCapabilities();
-            Capabilities.Initialize(this);
-
-            Initialize();
-        }
-
-        private void Setup()
-        {
 #if DEBUG
             if (DisplayMode == null)
             {
@@ -417,6 +418,7 @@ namespace MonoGame.Framework.Graphics
             _viewport = new Viewport(0, 0, DisplayMode.Width, DisplayMode.Height, 0, 1);
 
             PlatformSetup();
+            GraphicsDebug = new GraphicsDebug(this);
 
             VertexTextures = new TextureCollection(this, MaxVertexTextureSlots, true);
             VertexSamplerStates = new SamplerStateCollection(this, MaxVertexTextureSlots, true);
@@ -443,11 +445,10 @@ namespace MonoGame.Framework.Graphics
 
             RasterizerState = RasterizerState.CullCounterClockwise;
 
-            EffectCache = new Dictionary<int, Effect>();
-        }
+            Capabilities = new GraphicsCapabilities();
+            Capabilities.Initialize(this);
 
-        internal void Initialize()
-        {
+            _vertexBuffers = new VertexBufferBindings(0);
             PlatformInitialize();
 
             // Force set the default render states.

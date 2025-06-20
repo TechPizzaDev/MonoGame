@@ -98,7 +98,7 @@ namespace MonoGame.Framework.Input
         public static bool operator !=(in GamePadDPad left, in GamePadDPad right) => !(left == right);
 
         public bool Equals(GamePadDPad other) => this == other;
-        public override bool Equals(object obj) => obj is GamePadDPad other && Equals(other);
+        public override bool Equals(object? obj) => obj is GamePadDPad other && Equals(other);
 
         #endregion
 

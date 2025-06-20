@@ -160,7 +160,7 @@ namespace MonoGame.Framework.Input
 
         public readonly bool Equals(MouseState other) => this == other;
 
-        public override readonly bool Equals(object obj) => obj is MouseState other && this == other;
+        public override readonly bool Equals(object? obj) => obj is MouseState other && this == other;
 
         /// <summary>
         /// Compares whether two MouseState instances are equal.

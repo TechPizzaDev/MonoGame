@@ -48,12 +48,12 @@ namespace MonoGame.Framework.Graphics
 
         #region Public Methods
 
-        public bool Equals(DisplayMode other)
+        public bool Equals(DisplayMode? other)
         {
             return this == other;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is DisplayMode other && Equals(other);
         }

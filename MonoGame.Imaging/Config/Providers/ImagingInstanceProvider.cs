@@ -8,8 +8,7 @@ namespace MonoGame.Imaging.Config.Providers
 {
     public class ImagingInstanceProvider<TInstance> : IReadOnlyDictionary<ImageFormat, TInstance>
     {
-        private ConcurrentDictionary<ImageFormat, TInstance> _instances =
-            new ConcurrentDictionary<ImageFormat, TInstance>();
+        private readonly ConcurrentDictionary<ImageFormat, TInstance> _instances = new();
 
         public int Count => _instances.Count;
 

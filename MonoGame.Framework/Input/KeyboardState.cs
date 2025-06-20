@@ -257,7 +257,7 @@ namespace MonoGame.Framework.Input
             return this == other;
         }
 
-        public override readonly bool Equals(object obj)
+        public override readonly bool Equals(object? obj)
         {
             return obj is KeyboardState other && Equals(other);
         }

@@ -12,7 +12,7 @@ namespace MonoGame.Framework.Graphics
         /// <summary>
         /// The provided <see cref="Graphics.GraphicsDevice"/>.
         /// </summary>
-        GraphicsDevice GraphicsDevice { get; }
+        GraphicsDevice? GraphicsDevice { get; }
 
         /// <summary>
         /// Raised when a new <see cref="Graphics.GraphicsDevice"/> has been created.

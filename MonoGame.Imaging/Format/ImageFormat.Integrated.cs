@@ -6,7 +6,7 @@ namespace MonoGame.Imaging
 {
     public partial class ImageFormat
     {
-        private static HashSet<ImageFormat> _integratedFormats = new HashSet<ImageFormat>();
+        private static readonly HashSet<ImageFormat> _integratedFormats = new();
 
         #region Getters (and Initializers)
 

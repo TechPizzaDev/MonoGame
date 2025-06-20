@@ -9,7 +9,7 @@ namespace MonoGame.Framework.Graphics
 {
     public partial class SamplerState
     {
-        private SharpDX.Direct3D11.SamplerState _state;
+        private SharpDX.Direct3D11.SamplerState? _state;
 
         protected override void GraphicsDeviceResetting()
         {

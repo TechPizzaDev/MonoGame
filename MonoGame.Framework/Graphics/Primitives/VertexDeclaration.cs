@@ -28,8 +28,7 @@ namespace MonoGame.Framework.Graphics
         //     (Use the internal type Data. Do not expose a constructor. Use a factory method to
         //     cache the vertex declarations.)
 
-        private static readonly Dictionary<Data, VertexDeclaration> _vertexDeclarationCache =
-            new Dictionary<Data, VertexDeclaration>();
+        private static readonly Dictionary<Data, VertexDeclaration> _vertexDeclarationCache = new();
 
         private readonly Data _data;
 
@@ -153,7 +152,7 @@ namespace MonoGame.Framework.Graphics
         /// <summary>
         /// Determines whether the specified <see cref="VertexDeclaration"/> is equal to this instance.
         /// </summary>
-        public bool Equals(VertexDeclaration? other) => !(other is null) && _data.Equals(other._data);
+        public bool Equals(VertexDeclaration? other) => _data.Equals(other?._data);
 
         /// <summary>
         /// Determines whether the specified <see cref="object"/> is equal to this instance.

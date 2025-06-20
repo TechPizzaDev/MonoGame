@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Vector4 = System.Numerics.Vector4;
 using DXResource = SharpDX.Direct3D11.Resource;
 using DXTexture2D = SharpDX.Direct3D11.Texture2D;
+using System.Diagnostics.CodeAnalysis;
 
 #if WINDOWS_UAP
 using Windows.UI.Xaml.Controls;
@@ -67,11 +68,10 @@ namespace MonoGame.Framework.Graphics
         // The active depth view.
         private DepthStencilView? _currentDepthStencilView;
 
-        private readonly Dictionary<VertexDeclaration, DynamicVertexBuffer> _userVertexBuffers =
-            new Dictionary<VertexDeclaration, DynamicVertexBuffer>();
+        private readonly Dictionary<VertexDeclaration, DynamicVertexBuffer> _userVertexBuffers = new();
 
-        private DynamicIndexBuffer _userIndexBuffer16;
-        private DynamicIndexBuffer _userIndexBuffer32;
+        private DynamicIndexBuffer? _userIndexBuffer16;
+        private DynamicIndexBuffer? _userIndexBuffer32;
 
 #if WINDOWS_UAP
 
@@ -96,6 +96,8 @@ namespace MonoGame.Framework.Graphics
         /// </summary>
         public object Handle => _d3dDevice;
 
+        [MemberNotNull(nameof(_d3dDevice))]
+        [MemberNotNull(nameof(_d3dContext))]
         private void PlatformSetup()
         {
             MaxTextureSlots = 16;
@@ -550,13 +552,13 @@ namespace MonoGame.Framework.Graphics
         /// <summary>
         /// Create graphics device specific resources.
         /// </summary>
+        [MemberNotNull(nameof(_d3dDevice))]
+        [MemberNotNull(nameof(_d3dContext))]
         protected virtual void CreateDeviceResources()
         {
             // Dispose previous references.
-            if (_d3dDevice != null)
-                _d3dDevice.Dispose();
-            if (_d3dContext != null)
-                _d3dContext.Dispose();
+            _d3dDevice?.Dispose();
+            _d3dContext?.Dispose();
 
             // Windows requires BGRA support out of DX.
             var creationFlags = DeviceCreationFlags.BgraSupport;
@@ -619,11 +621,6 @@ namespace MonoGame.Framework.Graphics
 
             // Get Direct3D 11.1 context
             _d3dContext = _d3dDevice.ImmediateContext.QueryInterface<DeviceContext>();
-
-
-
-            // Create a new instance of GraphicsDebug because we support it on Windows platforms.
-            GraphicsDebug = new GraphicsDebug(this);
         }
 
         internal void SetHardwareFullscreen()

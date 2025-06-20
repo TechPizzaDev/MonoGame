@@ -3,6 +3,8 @@
 // file 'LICENSE.txt', which is part of this source code package.
 
 using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace MonoGame.Framework.Graphics
 {
@@ -12,9 +14,9 @@ namespace MonoGame.Framework.Graphics
         /// This field should only be accessed in <see cref="Dispose(bool)"/> if the disposing
         /// parameter is true. If disposing is false, this field may or may not be disposed yet.
         /// </summary>
-        private GraphicsDevice _graphicsDevice;
+        private GraphicsDevice? _graphicsDevice;
 
-        private WeakReference _selfReference;
+        private WeakReference? _selfReference;
 
         /// <summary>
         /// Occurs when the <see cref="GraphicsResource"/> is disposed.
@@ -29,12 +31,12 @@ namespace MonoGame.Framework.Graphics
         /// <summary>
         /// Gets or sets the name of this <see cref="GraphicsResource"/>.
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Gets or sets the tag object of this <see cref="GraphicsResource"/>.
         /// </summary>
-        public object Tag { get; set; }
+        public object? Tag { get; set; }
 
         /// <summary>
         /// Gets whether graphics operations are supported when not called on the main thread.
@@ -52,7 +54,11 @@ namespace MonoGame.Framework.Graphics
         /// </summary>
         public GraphicsDevice GraphicsDevice
         {
-            get => _graphicsDevice;
+            get
+            {
+                Debug.Assert(_graphicsDevice != null);
+                return _graphicsDevice;
+            }
             internal set
             {
                 if (value == null)
@@ -66,7 +72,7 @@ namespace MonoGame.Framework.Graphics
                 if (_graphicsDevice != null)
                 {
                     _graphicsDevice.RemoveResourceReference(_selfReference);
-                    _selfReference = null!;
+                    _selfReference = null;
                 }
                 _graphicsDevice = value;
 
@@ -146,8 +152,8 @@ namespace MonoGame.Framework.Graphics
 
             // Remove from the global list of graphics resources
             _graphicsDevice?.RemoveResourceReference(_selfReference);
-            _graphicsDevice = null!;
-            _selfReference = null!;
+            _graphicsDevice = null;
+            _selfReference = null;
 
             IsDisposed = true;
         }

@@ -137,7 +137,7 @@ namespace MonoGame.Framework.Input
         public static bool operator !=(in GamePadThumbSticks a, in GamePadThumbSticks b) => !(a == b);
 
         public bool Equals(GamePadThumbSticks other) => this == other;
-        public override bool Equals(object obj) => obj is GamePadThumbSticks other && Equals(other);
+        public override bool Equals(object? obj) => obj is GamePadThumbSticks other && Equals(other);
 
         #endregion
 

@@ -10,7 +10,7 @@ namespace MonoGame.Framework.Media
 {
     public sealed partial class Song : IEquatable<Song>, IDisposable
     {
-        private SoundEffectInstance _sound;
+        private SoundEffectInstance? _sound;
 
         private void PlatformInitialize(string fileName)
         {
