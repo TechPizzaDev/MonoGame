@@ -82,14 +82,16 @@ namespace MonoGame.Framework.Graphics
 
             public bool MoveNext()
             {
-                if (_index < _array.Length)
+                int index = _index;
+                var array = _array;
+                if ((uint) index < (uint) array.Length)
                 {
-                    Current = _array[_index];
-                    _index++;
+                    Current = array[index];
+                    _index = index + 1;
                     return true;
                 }
 
-                _index = _array.Length + 1;
+                _index = array.Length + 1;
                 Current = null!;
                 return false;
             }

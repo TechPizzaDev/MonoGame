@@ -22,10 +22,13 @@ namespace MonoGame.Framework.Graphics
             {
                 // Build the description.
                 var desc = new SharpDX.Direct3D11.BlendStateDescription();
-                _targetBlendState[0].GetState(ref desc.RenderTarget[0]);
-                _targetBlendState[1].GetState(ref desc.RenderTarget[1]);
-                _targetBlendState[2].GetState(ref desc.RenderTarget[2]);
-                _targetBlendState[3].GetState(ref desc.RenderTarget[3]);
+                
+                var src = _targetBlendState;
+                var dst = desc.RenderTarget;
+                for (int i = 0; i < src.Length; i++)
+                {
+                    src[i].GetState(ref dst[i]);
+                }
                 desc.IndependentBlendEnable = _independentBlendEnable;
 
                 // This is a new DX11 feature we should consider 

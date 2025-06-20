@@ -30,10 +30,11 @@ namespace MonoGame.Framework.Graphics
                 if (_applyToVertexStage && !_graphicsDevice.Capabilities.SupportsVertexTextures)
                     throw new NotSupportedException("Vertex textures are not supported on this device.");
 
-                if (_textures[index] == value)
+                var textures = _textures;
+                if (textures[index] == value)
                     return;
 
-                _textures[index] = value;
+                textures[index] = value;
                 _dirty |= 1 << index;
             }
         }
@@ -50,8 +51,7 @@ namespace MonoGame.Framework.Graphics
 
         internal void Clear()
         {
-            for (var i = 0; i < _textures.Length; i++)
-                _textures[i] = null;
+            _textures.AsSpan().Clear();
 
             PlatformClear();
             _dirty = int.MaxValue;

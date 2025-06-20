@@ -82,9 +82,10 @@ namespace MonoGame.Framework.Graphics
                 SetShaderSamplers(_vertexShader, device.VertexTextures, device.VertexSamplerStates);
 
                 // Update the constant buffers.
-                for (var c = 0; c < _vertexShader.CBuffers.Length; c++)
+                var cbuffers = _vertexShader.CBuffers;
+                for (int c = 0; c < cbuffers.Length; c++)
                 {
-                    var cb = _effect.ConstantBuffers[_vertexShader.CBuffers[c]];
+                    var cb = _effect.ConstantBuffers[cbuffers[c]];
                     cb.Update(_effect.Parameters);
                     device.SetConstantBuffer(ShaderStage.Vertex, c, cb);
                 }
@@ -96,11 +97,12 @@ namespace MonoGame.Framework.Graphics
 
                 // Update the texture parameters.
                 SetShaderSamplers(_pixelShader, device.Textures, device.SamplerStates);
-                
+
                 // Update the constant buffers.
-                for (var c = 0; c < _pixelShader.CBuffers.Length; c++)
+                var cbuffers = _pixelShader.CBuffers;
+                for (int c = 0; c < cbuffers.Length; c++)
                 {
-                    var cb = _effect.ConstantBuffers[_pixelShader.CBuffers[c]];
+                    var cb = _effect.ConstantBuffers[cbuffers[c]];
                     cb.Update(_effect.Parameters);
                     device.SetConstantBuffer(ShaderStage.Pixel, c, cb);
                 }

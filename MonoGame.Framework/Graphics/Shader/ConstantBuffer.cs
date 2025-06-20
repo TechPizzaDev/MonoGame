@@ -147,15 +147,17 @@ namespace MonoGame.Framework.Graphics
             if (_stateKey > EffectParameter.NextStateKey)
                 _stateKey = 0;
 
-            for (var p = 0; p < _parameters.Length; p++)
+            var array = _parameters;
+            var offsets = _offsets;
+            for (int p = 0; p < array.Length; p++)
             {
-                var index = _parameters[p];
+                int index = array[p];
                 var param = parameters[index];
 
                 if (param.StateKey < _stateKey)
                     continue;
 
-                var offset = _offsets[p];
+                int offset = offsets[p];
                 IsDirty = true;
 
                 SetParameter(offset, param);

@@ -675,14 +675,15 @@ namespace MonoGame.Framework.Graphics
             }
 
             // Try to early out if the current and new bindings are equal.
-            if (RenderTargetCount == renderTargets.Length)
+            ReadOnlySpan<RenderTargetBinding> bindings = GetRenderTargets();
+            if (bindings.Length == renderTargets.Length)
             {
                 bool isEqual = true;
 
-                for (int i = 0; i < RenderTargetCount; i++)
+                for (int i = 0; i < bindings.Length; i++)
                 {
-                    if (_currentRenderTargetBindings[i].RenderTarget != renderTargets[i].RenderTarget ||
-                        _currentRenderTargetBindings[i].ArraySlice != renderTargets[i].ArraySlice)
+                    if (bindings[i].RenderTarget != renderTargets[i].RenderTarget ||
+                        bindings[i].ArraySlice != renderTargets[i].ArraySlice)
                     {
                         isEqual = false;
                         break;
@@ -720,7 +721,7 @@ namespace MonoGame.Framework.Graphics
             PlatformResolveRenderTargets();
 
             // Clear the current bindings.
-            Array.Clear(_currentRenderTargetBindings, 0, _currentRenderTargetBindings.Length);
+            _currentRenderTargetBindings.AsSpan().Clear();
 
             bool clearTarget;
             int renderTargetWidth;
