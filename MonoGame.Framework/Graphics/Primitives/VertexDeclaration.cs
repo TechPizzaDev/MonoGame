@@ -68,10 +68,8 @@ namespace MonoGame.Framework.Graphics
         /// <exception cref="ArgumentEmptyException"><paramref name="elements"/> is empty.</exception>
         public VertexDeclaration(int vertexStride, params VertexElement[] elements)
         {
-            if (elements == null)
-                throw new ArgumentNullException(nameof(elements));
-            if (elements.Length == 0)
-                throw new ArgumentEmptyException(nameof(elements));
+            ArgumentNullException.ThrowIfNull(elements);
+            ArgumentEmptyException.ThrowIfEmpty(elements);
 
             lock (_vertexDeclarationCache)
             {
@@ -131,21 +129,26 @@ namespace MonoGame.Framework.Graphics
         /// </remarks>
         internal static VertexDeclaration FromType(Type vertexType)
         {
-            if (vertexType == null)
+            ArgumentNullException.ThrowIfNull(vertexType);
                 throw new ArgumentNullException(nameof(vertexType));
 
             if (!vertexType.IsValueType)
-                throw new ArgumentException("Must be value type.", nameof(vertexType));
+                ThrowHelper.Argument("Must be value type.", nameof(vertexType));
 
-            if (!(Activator.CreateInstance(vertexType) is IVertexType type))
-                throw new ArgumentException(
+            if (Activator.CreateInstance(vertexType) is not IVertexType type)
+            {
+                ThrowHelper.Argument(
                     $"{nameof(vertexType)} does not implement {nameof(IVertexType)}.", nameof(vertexType));
+                return null!;
+            }
 
             var vertexDeclaration = type.VertexDeclaration;
             if (vertexDeclaration is null)
-                throw new Exception(
-                    $"{nameof(IVertexType)}.{nameof(IVertexType.VertexDeclaration)} may not be null.");
-
+            {
+                ThrowHelper.Argument(
+                    $"{nameof(IVertexType)}.{nameof(IVertexType.VertexDeclaration)} may not be null.",
+                    nameof(vertexType));
+            }
             return vertexDeclaration;
         }
 

@@ -5,7 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime;
+using System.Runtime.CompilerServices;
 using MonoGame.Framework.Audio;
 using MonoGame.Framework.Content;
 using MonoGame.Framework.Graphics;
@@ -204,14 +206,21 @@ namespace MonoGame.Framework
             {
                 if (_graphicsDeviceService == null)
                 {
-                    _graphicsDeviceService = Services.GetService<IGraphicsDeviceService>();
-                    if (_graphicsDeviceService == null)
-                        throw new InvalidOperationException(FrameworkResources.NoGraphicsDeviceService);
+                    GetDeviceService();
+
+                    [MemberNotNull(nameof(_graphicsDeviceService))]
+                    [MethodImpl(MethodImplOptions.NoInlining)]
+                    void GetDeviceService()
+                    {
+                        _graphicsDeviceService = Services.GetService<IGraphicsDeviceService>();
+                        if (_graphicsDeviceService == null)
+                            ThrowHelper.InvalidOperation(FrameworkResources.NoGraphicsDeviceService);
+                    }
                 }
 
                 var device = _graphicsDeviceService.GraphicsDevice;
                 if (device == null)
-                    throw new InvalidOperationException(FrameworkResources.NoGraphicsDeviceInService);
+                    ThrowHelper.InvalidOperation(FrameworkResources.NoGraphicsDeviceInService);
 
                 return device;
             }
@@ -393,7 +402,7 @@ namespace MonoGame.Framework
             // any change fully in both the fixed and variable timestep 
             // modes across multiple devices and platforms.
 
-            RetryTick:
+        RetryTick:
 
             if (!IsActive && InactiveSleepTime.Ticks >= TimeSpan.TicksPerMillisecond)
                 ThreadHelper.Instance.Sleep(SleepMutex, InactiveSleepTime.Milliseconds);
@@ -411,7 +420,7 @@ namespace MonoGame.Framework
                 // Check if the sleep time is more than 1 millisecond.
                 if (sleepTicks >= Stopwatch.Frequency / 1000)
                 {
-                    int sleepMillis = (int)(sleepTicks / TimeSpan.TicksPerMillisecond);
+                    int sleepMillis = (int) (sleepTicks / TimeSpan.TicksPerMillisecond);
                     ThreadHelper.Instance.Sleep(SleepMutex, sleepMillis);
                 }
 

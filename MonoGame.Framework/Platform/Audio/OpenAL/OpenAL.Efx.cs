@@ -171,7 +171,7 @@ namespace MonoGame.Framework.Audio
         internal void AuxiliaryEffectSlot(uint slot, EfxEffectSlotf param, float value)
         {
             alAuxiliaryEffectSlotf(slot, param, value);
-            ALHelper.CheckError("Failes to set " + param + " " + value);
+            ALHelper.CheckError(param, value);
         }
 
         internal void BindSourceToAuxiliarySlot(uint source, int slot, int slotnumber, int filter)
@@ -182,13 +182,13 @@ namespace MonoGame.Framework.Audio
         internal void Effect(uint effect, EfxEffectf param, float value)
         {
             alEffectf(effect, param, value);
-            ALHelper.CheckError("Failed to set " + param + " " + value);
+            ALHelper.CheckError(param, value);
         }
 
         internal void Effect(uint effect, EfxEffecti param, int value)
         {
             alEffecti(effect, param, value);
-            ALHelper.CheckError("Failed to set " + param + " " + value);
+            ALHelper.CheckError(param, value);
         }
 
         public void GenFilters(Span<uint> output)

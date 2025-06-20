@@ -182,7 +182,8 @@ namespace MonoGame.Framework
                     return SharpDX.Direct3D11.Comparison.NotEqual;
 
                 default:
-                    throw new ArgumentException("Invalid comparison!");
+                    ThrowHelper.Argument("Invalid comparison!", nameof(compare));
+                    return default;
             }
         }
     }

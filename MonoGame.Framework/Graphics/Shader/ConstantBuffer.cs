@@ -124,7 +124,8 @@ namespace MonoGame.Framework.Graphics
                         }
                         break;
                     default:
-                        throw new NotSupportedException("Not supported!");
+                        ThrowHelper.NotSupported("Not supported!");
+                        break;
                 }
             }
 

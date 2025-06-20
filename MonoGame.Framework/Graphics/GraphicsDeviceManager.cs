@@ -437,7 +437,7 @@ namespace MonoGame.Framework
                 CreateDevice();
 
             if (GraphicsDevice == null)
-                throw new Exception("Missing graphics device.");
+                ThrowHelper.InvalidOperation("Missing graphics device.");
 
             if (!_shouldApplyChanges)
                 return;

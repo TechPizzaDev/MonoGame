@@ -2,7 +2,6 @@
 
 namespace MonoGame.Framework.Graphics
 {
-    [Serializable]
     public class PlatformGraphicsException : Exception
     {
         public PlatformGraphicsException() 
@@ -14,12 +13,6 @@ namespace MonoGame.Framework.Graphics
         }
 
         public PlatformGraphicsException(string? message, Exception? innerException) : base(message, innerException) 
-        { 
-        }
-
-        protected PlatformGraphicsException(
-            System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info, context) 
         { 
         }
     }

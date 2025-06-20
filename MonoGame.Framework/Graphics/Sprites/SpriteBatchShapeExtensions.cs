@@ -305,8 +305,7 @@ namespace MonoGame.Framework
             this SpriteBatch spriteBatch, Vector2 center, Vector2 radius, int sides, int count, Color color,
             float thickness = 1f, float start = -MathF.PI / 2, float layerDepth = 0)
         {
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             var points = new EllipseEnumerable(radius, sides, count + 1, start);
             bool connect = count - 1 == sides;

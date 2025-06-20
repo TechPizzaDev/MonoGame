@@ -95,7 +95,8 @@ namespace MonoGame.Framework.Graphics
                             return SharpDX.Direct3D11.Filter.ComparisonMinMagPointMipLinear;
 
                         default:
-                            throw new ArgumentException("Invalid texture filter!");
+                            ThrowHelper.Argument("Invalid texture filter!", nameof(filter));
+                            return default;
                     }
                 case TextureFilterMode.Default:
                     switch (filter)
@@ -128,10 +129,12 @@ namespace MonoGame.Framework.Graphics
                             return SharpDX.Direct3D11.Filter.MinMagPointMipLinear;
 
                         default:
-                            throw new ArgumentException("Invalid texture filter!");
+                            ThrowHelper.Argument("Invalid texture filter!", nameof(filter));
+                            return default;
                     }
                 default:
-                    throw new ArgumentException("Invalid texture filter mode!");
+                    ThrowHelper.Argument("Invalid texture filter mode!", nameof(mode));
+                    return default;
             }
         }
 
@@ -152,7 +155,8 @@ namespace MonoGame.Framework.Graphics
                     return SharpDX.Direct3D11.TextureAddressMode.Border;
 
                 default:
-                    throw new ArgumentException("Invalid texture address mode!");
+                    ThrowHelper.Argument("Invalid texture address mode!", nameof(mode));
+                    return default;
             }
         }
 

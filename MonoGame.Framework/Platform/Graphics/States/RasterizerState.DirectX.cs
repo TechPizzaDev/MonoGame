@@ -9,7 +9,7 @@ namespace MonoGame.Framework.Graphics
 {
     public partial class RasterizerState
     {
-        private SharpDX.Direct3D11.RasterizerState _state;
+        private SharpDX.Direct3D11.RasterizerState? _state;
 
         protected override void GraphicsDeviceResetting()
         {
@@ -58,7 +58,9 @@ namespace MonoGame.Framework.Graphics
                         depthMul = 1 << 24 - 1;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        ThrowHelper.Argument("Invalid active depth format.", nameof(device));
+                        depthMul = 0;
+                        break;
                 }
 
                 desc.DepthBias = (int) (DepthBias * depthMul);

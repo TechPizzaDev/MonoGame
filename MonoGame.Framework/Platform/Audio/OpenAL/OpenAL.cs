@@ -304,8 +304,6 @@ namespace MonoGame.OpenAL
 
         public static string? GetString(int p) => Marshal.PtrToStringAnsi(alGetString(p));
 
-        public static string GetErrorString(ALError errorCode) => errorCode.ToString();
-
-        public static string Get(ALGetString p) => GetString((int)p);
+        public static string? Get(ALGetString p) => GetString((int)p);
     }
 }

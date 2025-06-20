@@ -4,7 +4,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace MonoGame.Framework.Graphics
 {
@@ -63,9 +62,7 @@ namespace MonoGame.Framework.Graphics
             }
             internal set
             {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-
+                ArgumentNullException.ThrowIfNull(value);
                 if (_graphicsDevice == value)
                     return;
 
@@ -160,7 +157,7 @@ namespace MonoGame.Framework.Graphics
             if (!Threading.IsOnMainThread)
             {
                 var msg = isSpanOverload ? FrameworkResources.OffThreadSpanNotSupported : null;
-                throw new OffThreadNotSupportedException(msg);
+                ThrowHelper.OffThreadNotSupported(msg);
             }
         }
 
@@ -183,7 +180,7 @@ namespace MonoGame.Framework.Graphics
         {
             if (IsDisposed)
                 return;
-            
+
             // Do not trigger the event if called from the finalizer
             if (disposing)
                 Disposing?.Invoke(this);

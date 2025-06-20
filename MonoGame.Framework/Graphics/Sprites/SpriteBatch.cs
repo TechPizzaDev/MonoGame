@@ -80,8 +80,7 @@ namespace MonoGame.Framework.Graphics
             Matrix4x4? transformMatrix = null)
         {
             if (_beginCalled)
-                throw new InvalidOperationException(
-                    "Begin cannot be called again until End has been called.");
+                ThrowHelper.InvalidOperation("Begin cannot be called again until End has been called.");
 
             // defaults
             _sortMode = sortMode;
@@ -109,7 +108,7 @@ namespace MonoGame.Framework.Graphics
         /// </summary>
         public void Flush()
         {
-            AssertBeginCalled(nameof(Flush));
+            AssertBeginCalled();
 
             _batcher.DrawBatch(_sortMode, _effect);
         }
@@ -133,7 +132,7 @@ namespace MonoGame.Framework.Graphics
         /// </summary>
         public void End()
         {
-            AssertBeginCalled(nameof(End));
+            AssertBeginCalled();
 
             _beginCalled = false;
 
@@ -190,30 +189,17 @@ namespace MonoGame.Framework.Graphics
             _spritePass.Apply();
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AssertBeginCalled(string callerName)
+        private void AssertBeginCalled([CallerMemberName] string? callerName = null)
         {
             if (!_beginCalled)
-                throw new InvalidOperationException(
-                    $"{nameof(Begin)} must be called before you can call {callerName}.");
-        }
+            {
+                Throw(callerName);
+            }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AssertValidArguments(Texture2D texture, string callerName)
-        {
-            if (texture == null)
-                throw new ArgumentNullException(nameof(texture));
-
-            AssertBeginCalled(callerName);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AssertValidArguments(SpriteFont spriteFont, string callerName)
-        {
-            if (spriteFont == null)
-                throw new ArgumentNullException(nameof(spriteFont));
-
-            AssertBeginCalled(callerName);
+            static void Throw(string? callerName)
+            {
+                ThrowHelper.InvalidOperation($"{nameof(Begin)} must be called before you can call {callerName}.");
+            }
         }
 
         #endregion
@@ -266,8 +252,7 @@ namespace MonoGame.Framework.Graphics
             // or if both have been assigned a value, raise an error
             if (destinationRectangle.HasValue == position.HasValue)
             {
-                throw new ArgumentException(
-                    "Expected drawRectangle or position, but received neither or both.");
+                ThrowHelper.Argument("Expected drawRectangle or position, but received neither or both.");
             }
 
             if (position.HasValue) // Call Draw() using position
@@ -316,7 +301,8 @@ namespace MonoGame.Framework.Graphics
             Texture2D texture, Vector2 position, RectangleF? sourceRectangle, Color color,
             float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip, float sortDepth)
         {
-            AssertValidArguments(texture, nameof(Draw));
+            ArgumentNullException.ThrowIfNull(texture);
+            AssertBeginCalled();
 
             origin *= scale;
 
@@ -456,7 +442,8 @@ namespace MonoGame.Framework.Graphics
         /// <param name="color">A color mask.</param>
         public void Draw(Texture2D texture, Vector2 position, RectangleF? sourceRectangle, Color color)
         {
-            AssertValidArguments(texture, nameof(Draw));
+            ArgumentNullException.ThrowIfNull(texture);
+            AssertBeginCalled();
 
             Vector4 texCoord;
             float w;
@@ -494,7 +481,8 @@ namespace MonoGame.Framework.Graphics
         public void Draw(
             Texture2D texture, RectangleF destinationRectangle, RectangleF? sourceRectangle, Color color)
         {
-            AssertValidArguments(texture, nameof(Draw));
+            ArgumentNullException.ThrowIfNull(texture);
+            AssertBeginCalled();
 
             Vector4 texCoord;
             if (sourceRectangle.HasValue)
@@ -524,7 +512,8 @@ namespace MonoGame.Framework.Graphics
         /// <param name="color">A color mask.</param>
         public void Draw(Texture2D texture, Vector2 position, Color color)
         {
-            AssertValidArguments(texture, nameof(Draw));
+            ArgumentNullException.ThrowIfNull(texture);
+            AssertBeginCalled();
 
             float sortKey = GetSortKey(texture, 0);
             GetBatchQuad(texture, sortKey).Set(
@@ -543,7 +532,8 @@ namespace MonoGame.Framework.Graphics
         /// <param name="color">A color mask.</param>
         public void Draw(Texture2D texture, RectangleF destinationRectangle, Color color)
         {
-            AssertValidArguments(texture, nameof(Draw));
+            ArgumentNullException.ThrowIfNull(texture);
+            AssertBeginCalled();
 
             float sortKey = GetSortKey(texture, 0);
             GetBatchQuad(texture, sortKey).Set(
@@ -564,7 +554,9 @@ namespace MonoGame.Framework.Graphics
         public void DrawString(
             SpriteFont spriteFont, RuneEnumerator text, Vector2 position, Color color)
         {
-            AssertValidArguments(spriteFont, nameof(DrawString));
+            ArgumentNullException.ThrowIfNull(spriteFont);
+            AssertBeginCalled();
+
             float sortKey = GetSortKey(spriteFont.Texture, 0);
 
             var offset = Vector2.Zero;
@@ -653,7 +645,9 @@ namespace MonoGame.Framework.Graphics
             SpriteFont spriteFont, RuneEnumerator text, Vector2 position, Color color,
             float rotation, Vector2 origin, Vector2 scale, SpriteFlip flip, float layerDepth)
         {
-            AssertValidArguments(spriteFont, nameof(DrawString));
+            ArgumentNullException.ThrowIfNull(spriteFont);
+            AssertBeginCalled();
+
             float sortKey = GetSortKey(spriteFont.Texture, layerDepth);
 
             var flipAdjustment = Vector2.Zero;

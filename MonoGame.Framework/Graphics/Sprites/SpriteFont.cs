@@ -209,10 +209,15 @@ namespace MonoGame.Framework.Graphics
                 return index;
 
             if (_defaultGlyphIndex == -1)
-                throw new KeyNotFoundException(
-                    "Character cannot be resolved and no default glyph has been assigned to this font. Key: " + rune);
+                Throw(rune);
 
             return _defaultGlyphIndex;
+
+            static void Throw(Rune rune)
+            {
+                throw new KeyNotFoundException(
+                    "Character cannot be resolved and no default glyph has been assigned to this font. Key: " + rune);
+            }
         }
 
         public Dictionary<Rune, int>.Enumerator GetEnumerator()

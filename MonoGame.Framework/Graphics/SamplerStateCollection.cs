@@ -44,11 +44,9 @@ namespace MonoGame.Framework.Graphics
 		public SamplerState this [int index]
         {
             get => _samplers[index];
-
             set
             {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
 
                 if (_samplers[index] == value)
                     return;

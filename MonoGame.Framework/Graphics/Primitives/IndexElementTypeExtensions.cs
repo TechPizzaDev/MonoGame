@@ -20,7 +20,8 @@ namespace MonoGame.Framework.Graphics
                     return 4;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(elementType));
+                    ThrowHelper.ArgumentOutOfRange(null, nameof(elementType));
+                    return 0;
             }
         }
     }

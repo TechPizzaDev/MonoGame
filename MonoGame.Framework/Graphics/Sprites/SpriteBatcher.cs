@@ -129,8 +129,7 @@ namespace MonoGame.Framework.Graphics
         {
             if (effect != null && effect.IsDisposed)
             {
-                throw new ArgumentException(
-                    "The effect is disposed.", nameof(effect), new ObjectDisposedException(effect.GetType().FullName));
+                ThrowHelper.Argument("The effect is disposed.", nameof(effect));
             }
 
             // nothing to do

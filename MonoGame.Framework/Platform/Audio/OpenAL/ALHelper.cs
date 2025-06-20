@@ -1,22 +1,33 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using MonoGame.OpenAL;
 
 namespace MonoGame.Framework.Audio
 {
     internal static class ALHelper
     {
-        [System.Diagnostics.Conditional("DEBUG")]
-        [System.Diagnostics.DebuggerHidden]
-        internal static void CheckError(string message = "", params object[] args)
+        internal static void CheckError(string message)
         {
-            ALError error;
-            if ((error = AL.GetError()) != ALError.NoError)
+            ALError error = AL.GetError();
+            if (error != ALError.NoError)
             {
-                if (args != null && args.Length > 0)
-                    message = string.Format(message, args);
-
-                throw new InvalidOperationException(message + " (Reason: " + AL.GetErrorString(error) + ")");
+                ThrowError(message, error);
             }
+        }
+
+        internal static void CheckError<K, V>(K key, V value, [CallerMemberName] string? prefix = null)
+        {
+            ALError error = AL.GetError();
+            if (error != ALError.NoError)
+            {
+                ThrowError($"{prefix}: Failed to set {key} to {value}", error);
+            }
+        }
+
+        private static void ThrowError(string message, ALError error)
+        {
+            ThrowHelper.InvalidOperation($"{message} (Reason: {error})");
         }
 
         public static bool IsStereoFormat(ALFormat format)
@@ -49,31 +60,16 @@ namespace MonoGame.Framework.Audio
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(channels), "Only mono and stereo channels are supported.");
+                    ThrowHelper.ArgumentOutOfRange("Only mono and stereo channels are supported.", nameof(channels));
+                    return default;
             }
-            throw new ArgumentOutOfRangeException(nameof(depth), "Audio format is not supported.");
+            ThrowHelper.ArgumentOutOfRange("Audio format is not supported.", nameof(depth));
+            return default;
         }
 
         public static ALFormat GetALFormat(AudioChannels channels, bool isFloat)
         {
             return GetALFormat(channels, isFloat ? AudioDepth.Float : AudioDepth.Short);
-        }
-    }
-
-    internal static class ALCHelper
-    {
-        [System.Diagnostics.Conditional("DEBUG")]
-        [System.Diagnostics.DebuggerHidden]
-        internal static void CheckError(string message = "", params object[] args)
-        {
-            ALCError error;
-            if ((error = ALC.GetError()) != ALCError.NoError)
-            {
-                if (args != null && args.Length > 0)
-                    message = string.Format(message, args);
-
-                throw new InvalidOperationException(message + " (Reason: " + error.ToString() + ")");
-            }
         }
     }
 }

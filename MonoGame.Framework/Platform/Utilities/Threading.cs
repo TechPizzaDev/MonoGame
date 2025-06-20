@@ -26,7 +26,7 @@ namespace MonoGame.Framework
 
         static Threading()
         {
-            _mainThreadId = Thread.CurrentThread.ManagedThreadId;
+            _mainThreadId = Environment.CurrentManagedThreadId;
         }
 
 #if ANDROID
@@ -40,7 +40,7 @@ namespace MonoGame.Framework
         /// Gets whether the caller is running on the main thread.
         /// </summary>
         /// <returns><see langword="true"/> if the caller is running on the main thread.</returns>
-        public static bool IsOnMainThread => Thread.CurrentThread.ManagedThreadId == _mainThreadId;
+        public static bool IsOnMainThread => Environment.CurrentManagedThreadId == _mainThreadId;
 
         /// <summary>
         /// Throws an exception if the caller is not running on the main thread.
@@ -51,7 +51,7 @@ namespace MonoGame.Framework
         public static void AssertMainThread()
         {
             if (!IsOnMainThread)
-                throw new OffThreadNotSupportedException();
+                ThrowHelper.OffThreadNotSupported(null);
         }
 
         /// <summary>
@@ -60,8 +60,7 @@ namespace MonoGame.Framework
         /// <param name="action">The action to be run on the main thread.</param>
         internal static void BlockOnMainThread(Action action)
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
 
             // If we are already on the main thread, just call the action and be done with it.
             if (IsOnMainThread)
@@ -82,7 +81,7 @@ namespace MonoGame.Framework
             });
 
             if (!resetEvent.Wait(MaxWaitForMainThread))
-                throw new TimeoutException();
+                ThrowHelper.Timeout();
         }
 
         private static readonly List<Action> _actionList = new();
