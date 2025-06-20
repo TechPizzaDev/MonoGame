@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace MonoGame.Framework.Collections
@@ -89,9 +90,8 @@ namespace MonoGame.Framework.Collections
             {
                 // To avoid excess resizes, first set size based on collection's count. The collection may
                 // contain duplicates, so call TrimExcess if resulting LongHashSet is larger than the threshold.
-                int? count = CollectionHelper.TryGetCount(collection);
-                if (count.HasValue)
-                    Initialize(count.Value);
+                if (collection.TryGetNonEnumeratedCount(out int count))
+                    Initialize(count);
 
                 UnionWith(collection);
 

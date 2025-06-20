@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using MonoGame.Framework.Collections;
 
 namespace MonoGame.Framework.IO
@@ -94,7 +95,7 @@ namespace MonoGame.Framework.IO
             if (streams == null)
                 throw new ArgumentNullException(nameof(streams));
 
-            _parts = new Queue<Part>(CollectionHelper.TryGetCount(streams) ?? 4);
+            _parts = new Queue<Part>(streams.TryGetNonEnumeratedCount(out int count) ? count : 4);
 
             foreach (var stream in streams)
                 _parts.Enqueue(new Part(stream, leaveOpen));

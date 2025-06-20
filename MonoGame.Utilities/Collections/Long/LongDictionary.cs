@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace MonoGame.Framework.Collections
@@ -135,9 +136,8 @@ namespace MonoGame.Framework.Collections
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
 
-            int? count = CollectionHelper.TryGetCount(collection);
-            if (count.HasValue)
-                Initialize(count.Value);
+            if (collection.TryGetNonEnumeratedCount(out int count))
+                Initialize(count);
 
             foreach (KeyValuePair<TKey, TValue> pair in collection)
                 Add(pair.Key, pair.Value);
