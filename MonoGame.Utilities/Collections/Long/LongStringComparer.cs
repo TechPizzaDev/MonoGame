@@ -7,26 +7,16 @@ namespace MonoGame.Framework.Collections
     {
         public override bool IsRandomized => true;
 
-        public override int GetHashCode(string? value)
-        {
-            var span = value.AsSpan();
-            if (span.IsEmpty)
-                return 0;
+        public override int GetHashCode(string? value) => Hash(value).ToHashCode32();
 
-            var bytes = MemoryMarshal.AsBytes(span);
-            var hash = MarvinHash64.ComputeHash(bytes, MarvinHash64.DefaultSeed);
-            return MarvinHash64.CollapseHash32(hash);
-        }
-        
-        public override long GetLongHashCode(string? value)
-        {
-            var span = value.AsSpan();
-            if (span.IsEmpty)
-                return 0;
+        public override long GetLongHashCode(string? value) => Hash(value).ToHashCode();
 
-            var bytes = MemoryMarshal.AsBytes(span);
-            var hash = MarvinHash64.ComputeHash(bytes, MarvinHash64.DefaultSeed);
-            return MarvinHash64.CollapseHash64(hash);
+        private static LongHashCode Hash(string? value)
+        {
+            LongHashCode code = new();
+            var bytes = MemoryMarshal.AsBytes(value.AsSpan());
+            code.AddBytes(bytes);
+            return code;
         }
     }
 }
