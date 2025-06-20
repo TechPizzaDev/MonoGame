@@ -1,127 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace MonoGame.Framework
 {
     public ref struct RuneEnumerator
     {
-        private delegate bool MoveNextDelegate(ref RuneEnumerator enumerator);
-
-        private static MoveNextDelegate CachedSpanMoveNext { get; } = SpanMoveNext;
-        private static MoveNextDelegate CachedStringMoveNext { get; } = StringMoveNext;
-        private static MoveNextDelegate CachedBuilderMoveNext { get; } = BuilderMoveNext;
-        private static MoveNextDelegate CachedInterfaceMoveNext { get; } = InterfaceMoveNext;
-
-        private MoveNextDelegate _moveNext;
-
         private SpanRuneEnumerator _spanEnumerator;
-        private StringRuneEnumerator _stringEnumerator;
         private StringBuilder.ChunkEnumerator _builderEnumerator;
-        private IEnumerator<Rune> _interfaceEnumerator;
+        private readonly IEnumerator<Rune>? _interfaceEnumerator;
 
         public Rune Current { get; private set; }
 
-        private RuneEnumerator(MoveNextDelegate moveNext) : this()
-        {
-            _moveNext = moveNext;
-        }
-
-        public RuneEnumerator(SpanRuneEnumerator spanEnumerator) : this(CachedSpanMoveNext)
+        public RuneEnumerator(SpanRuneEnumerator spanEnumerator)
         {
             _spanEnumerator = spanEnumerator;
         }
 
-        public RuneEnumerator(StringRuneEnumerator stringEnumerator) : this(CachedStringMoveNext)
-        {
-            _stringEnumerator = stringEnumerator;
-        }
-
-        public RuneEnumerator(StringBuilder.ChunkEnumerator builderEnumerator) : this(CachedBuilderMoveNext)
+        public RuneEnumerator(StringBuilder.ChunkEnumerator builderEnumerator)
         {
             _builderEnumerator = builderEnumerator;
         }
 
-        public RuneEnumerator(IEnumerator<Rune> interfaceEnumerator) : this(CachedInterfaceMoveNext)
+        public RuneEnumerator(IEnumerator<Rune>? interfaceEnumerator)
         {
             _interfaceEnumerator = interfaceEnumerator;
         }
 
         public bool MoveNext()
         {
-            return _moveNext.Invoke(ref this);
-        }
-
-        public RuneEnumerator GetEnumerator()
-        {
-            return this;
-        }
-
-        private static bool SpanMoveNext(ref RuneEnumerator e)
-        {
-            if (e._spanEnumerator.MoveNext())
+            if (_spanEnumerator.MoveNext())
             {
-                e.Current = e._spanEnumerator.Current;
+                Current = _spanEnumerator.Current;
+                return true;
+            }
+            return MoveNextSlow();
+        }
+
+        private bool MoveNextSlow()
+        {
+            if (_builderEnumerator.MoveNext())
+            {
+                return MoveNextRefill();
+            }
+
+            if (_interfaceEnumerator == null)
+            {
+                return false;
+            }
+            return MoveNextInterface();
+        }
+
+        private bool MoveNextInterface()
+        {
+            Debug.Assert(_interfaceEnumerator != null);
+            if (_interfaceEnumerator.MoveNext())
+            {
+                Current = _interfaceEnumerator.Current;
                 return true;
             }
             return false;
         }
 
-        private static bool StringMoveNext(ref RuneEnumerator e)
+        private bool MoveNextRefill()
         {
-            if (e._stringEnumerator.MoveNext())
+            var chunkSpan = _builderEnumerator.Current.Span;
+            _spanEnumerator = chunkSpan.EnumerateRunes();
+
+            if (_spanEnumerator.MoveNext())
             {
-                e.Current = e._stringEnumerator.Current;
+                Current = _spanEnumerator.Current;
                 return true;
             }
             return false;
         }
 
-        private static bool BuilderMoveNext(ref RuneEnumerator e)
-        {
-            TryReturnFromChunk:
-            if (e._spanEnumerator.MoveNext())
-            {
-                e.Current = e._spanEnumerator.Current;
-                return true;
-            }
+        public readonly RuneEnumerator GetEnumerator() => this;
 
-            if (e._builderEnumerator.MoveNext())
-            {
-                var chunkSpan = e._builderEnumerator.Current.Span;
-                e._spanEnumerator = chunkSpan.EnumerateRunes();
-                goto TryReturnFromChunk;
-            }
-            return false;
-        }
+        public static implicit operator RuneEnumerator(ReadOnlySpan<char> text) => new(text.EnumerateRunes());
 
-        private static bool InterfaceMoveNext(ref RuneEnumerator e)
-        {
-            if (e._interfaceEnumerator != null &&
-                e._interfaceEnumerator.MoveNext())
-            {
-                e.Current = e._interfaceEnumerator.Current;
-                return true;
-            }
-            return false;
-        }
+        public static implicit operator RuneEnumerator(ReadOnlyMemory<char> text) => text.Span;
 
-        public static implicit operator RuneEnumerator(ReadOnlySpan<char> text)
-        {
-            return new RuneEnumerator(text.EnumerateRunes());
-        }
-
-        public static implicit operator RuneEnumerator(ReadOnlyMemory<char> text)
-        {
-            return new RuneEnumerator(text.Span.EnumerateRunes());
-        }
-
-        public static implicit operator RuneEnumerator(string? text)
-        {
-            if (text == null)
-                return default;
-            return new RuneEnumerator(text.EnumerateRunes());
-        }
+        public static implicit operator RuneEnumerator(string? text) => text.AsSpan();
 
         public static implicit operator RuneEnumerator(StringBuilder? text)
         {
