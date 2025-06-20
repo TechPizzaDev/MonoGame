@@ -21,9 +21,10 @@ namespace MonoGame.Framework.Vectors
             get
             {
                 int sum = 0;
-                var span = Components.Span;
-                for (int i = 0; i < span.Length; i++)
-                    sum += span[i].Bits;
+                foreach (ref readonly VectorComponent v in Components.Span)
+                {
+                    sum += v.Bits;
+                }
                 return sum;
             }
         }
@@ -36,9 +37,10 @@ namespace MonoGame.Framework.Vectors
             get
             {
                 int min = int.MaxValue;
-                var span = Components.Span;
-                for (int i = 0; i < span.Length; i++)
-                    min = Math.Min(min, span[i].Bits);
+                foreach (ref readonly VectorComponent v in Components.Span)
+                {
+                    min = Math.Min(min, v.Bits);
+                }
                 return min;
             }
         }
@@ -51,9 +53,10 @@ namespace MonoGame.Framework.Vectors
             get
             {
                 int max = int.MinValue;
-                var span = Components.Span;
-                for (int i = 0; i < span.Length; i++)
-                    max = Math.Max(max, span[i].Bits);
+                foreach (ref readonly VectorComponent v in Components.Span)
+                {
+                    max = Math.Max(max, v.Bits);
+                }
                 return max;
             }
         }
@@ -72,7 +75,7 @@ namespace MonoGame.Framework.Vectors
             foreach (var component in components)
                 AssertValidComponent(component);
 
-            Components = (VectorComponent[])components.Clone();
+            Components = (VectorComponent[]) components.Clone();
         }
 
         /// <summary>
@@ -134,7 +137,7 @@ namespace MonoGame.Framework.Vectors
 
                 if (component.Type == VectorComponentType.BitField)
                     builder.Append(component.Bits).Append('u');
-                else if(component.Type == VectorComponentType.SignedBitField)
+                else if (component.Type == VectorComponentType.SignedBitField)
                     builder.Append(component.Bits).Append('i');
                 else
                     builder.Append(component.Type.ToShortString());
