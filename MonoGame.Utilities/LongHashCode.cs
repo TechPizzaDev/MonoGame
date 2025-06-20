@@ -1,25 +1,27 @@
 ﻿// Copied from .NET Foundation (and Modified)
+// See https://github.com/dotnet/runtime/blob/7baa054334c3307652df3ae375d800dc17b1e39f/src/libraries/System.Private.CoreLib/src/System/HashCode.cs
+// See https://github.com/dotnet/runtime/blob/7baa054334c3307652df3ae375d800dc17b1e39f/src/libraries/System.IO.Hashing/src/System/IO/Hashing/XxHash64.State.cs
 
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using MonoGame.Framework.Collections;
 
 namespace MonoGame.Framework
 {
-    [SuppressMessage("Design", "CA1066:Implement IEquatable when overriding Object.Equals", Justification = "<Pending>")]
     [SuppressMessage("Usage", "CA2231:Overload operator equals on overriding value type Equals", Justification = "<Pending>")]
-    public struct LongHashCode
+    public partial struct LongHashCode
     {
-        private static ulong Seed { get; } = MarvinHash64.GenerateSeed();
+        private static readonly ulong _seed = (ulong)Random.Shared.NextInt64(long.MinValue, long.MaxValue);
 
-        private const ulong Prime1 = 11400714785074694791UL;
-        private const ulong Prime2 = 14029467366897019727UL;
-        private const ulong Prime3 = 1609587929392839161UL;
-        private const ulong Prime4 = 9650029242287828579UL;
-        private const ulong Prime5 = 2870177450012600261UL;
+        private const ulong Prime1 = 0x9E3779B185EBCA87UL;
+        private const ulong Prime2 = 0xC2B2AE3D27D4EB4FUL;
+        private const ulong Prime3 = 0x165667B19E3779F9UL;
+        private const ulong Prime4 = 0x85EBCA77C2B2AE63UL;
+        private const ulong Prime5 = 0x27D4EB2F165667C5UL;
 
         private ulong _v1, _v2, _v3, _v4;
         private ulong _queue1, _queue2, _queue3;
@@ -223,10 +225,10 @@ namespace MonoGame.Framework
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void Initialize(out ulong v1, out ulong v2, out ulong v3, out ulong v4)
         {
-            v1 = Seed + Prime1 + Prime2;
-            v2 = Seed + Prime2;
-            v3 = Seed;
-            v4 = Seed - Prime1;
+            v1 = _seed + unchecked(Prime1 + Prime2);
+            v2 = _seed + Prime2;
+            v3 = _seed;
+            v4 = _seed - Prime1;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -238,8 +240,7 @@ namespace MonoGame.Framework
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static ulong QueueRound(ulong hash, ulong queuedValue)
         {
-            hash ^= BitOperations.RotateLeft(queuedValue * Prime2, 31) * Prime1;
-            return BitOperations.RotateLeft(hash, 27) * Prime1 + Prime4;
+            return (hash ^ Round(0, queuedValue)) * Prime1 + Prime4;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -254,7 +255,7 @@ namespace MonoGame.Framework
 
         private static ulong MixEmptyState()
         {
-            return Seed + Prime5;
+            return _seed + Prime5;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -277,6 +278,71 @@ namespace MonoGame.Framework
         {
             comparer ??= LongEqualityComparer<T>.Default;
             Add(value == null ? 0 : comparer.GetLongHashCode(value));
+        }
+
+        /// <summary>Adds a span of bytes to the hash code.</summary>
+        /// <param name="value">The span.</param>
+        /// <remarks>
+        /// This method does not guarantee that the result of adding a span of bytes will match
+        /// the result of adding the same bytes individually.
+        /// </remarks>
+        public void AddBytes(ReadOnlySpan<byte> value)
+        {
+            if (value.Length < sizeof(long) * 4)
+            {
+                goto Small;
+            }
+
+            // Usually Add calls Initialize but if we haven't used HashCode before it won't have been called.
+            if (_length == 0)
+            {
+                Initialize(out _v1, out _v2, out _v3, out _v4);
+            }
+            else
+            {
+                // If we have at least 32 bytes to hash, we can add them in 32-byte batches,
+                // but we first have to add enough data to flush any queued values.
+                switch (_length % 4)
+                {
+                    case 1:
+                        Add(MemoryMarshal.Read<long>(value));
+                        value = value.Slice(sizeof(long));
+                        goto case 2;
+                    case 2:
+                        Add(MemoryMarshal.Read<long>(value));
+                        value = value.Slice(sizeof(long));
+                        goto case 3;
+                    case 3:
+                        Add(MemoryMarshal.Read<long>(value));
+                        value = value.Slice(sizeof(long));
+                        break;
+                }
+            }
+
+            // With the queue clear, we add 32 bytes at a time until the input has fewer than 32 bytes remaining.
+            while (value.Length >= sizeof(long) * 4)
+            {
+                _v1 = Round(_v1, MemoryMarshal.Read<ulong>(value));
+                _v2 = Round(_v2, MemoryMarshal.Read<ulong>(value.Slice(sizeof(long) * 1)));
+                _v3 = Round(_v3, MemoryMarshal.Read<ulong>(value.Slice(sizeof(long) * 2)));
+                _v4 = Round(_v4, MemoryMarshal.Read<ulong>(value.Slice(sizeof(long) * 3)));
+
+                _length += 4;
+                value = value.Slice(sizeof(long) * 4);
+            }
+
+        Small:
+            // Add 8 bytes at a time until the input has fewer than 8 bytes remaining.
+            while (value.Length >= sizeof(long))
+            {
+                Add(MemoryMarshal.Read<long>(value));
+                value = value.Slice(sizeof(long));
+            }
+        
+            // Add the remaining bytes in bulk.
+            Span<byte> remainder = stackalloc byte[sizeof(long)];
+            value.CopyTo(remainder);
+            Add(MemoryMarshal.Read<long>(remainder));
         }
 
         private void Add(long value)
@@ -329,7 +395,7 @@ namespace MonoGame.Framework
             }
         }
 
-        public long ToHashCode()
+        public readonly long ToHashCode()
         {
             // Storing the value of _length locally shaves of quite a few bytes
             // in the resulting machine code.
@@ -368,6 +434,12 @@ namespace MonoGame.Framework
 
             hash = MixFinal(hash);
             return (long)hash;
+        }
+
+        public readonly int ToHashCode32()
+        {
+            long hash = ToHashCode();
+            return (int)hash ^ (int)(hash >>> 32);
         }
 
 #pragma warning disable 0809
