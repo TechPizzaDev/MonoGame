@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <DefineConstants>OPENGL;OPENAL;XNADESIGNPROVIDED;LINUX;DESKTOPGL;SUPPORTS_EFX;NETSTANDARD;NVORBIS</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
@@ -151,7 +151,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MonoGame.Imaging\MonoGame.Imaging.csproj" />
     <ProjectReference Include="..\MonoGame.Utilities\MonoGame.Utilities.csproj" />
-    <ProjectReference Include="..\ThirdParty\NVorbis\NVorbis\NVorbis.csproj" />
+    <ProjectReference Include="..\ThirdParty\VorbisPizza\NVorbis\NVorbis.csproj" />
   </ItemGroup>
 
   <Import Project="Platform\OpenGL.targets" />

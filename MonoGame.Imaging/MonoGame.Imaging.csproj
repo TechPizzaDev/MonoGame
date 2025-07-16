@@ -1,31 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>net9.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <BaseOutputPath>..\Artifacts\MonoGame.Imaging</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Coders\Encoding\StbImageEncoderBase.CustomDeflate.cs" />
-    <Compile Remove="ColorEncoding.cs" />
-    <Compile Remove="Pixels\PixelRowProvider old.cs" />
-    <Compile Remove="Utilities\BufferPixelProvider.Expressions.cs" />
-    <Compile Remove="Utilities\ImageWriter.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Containers\Specialized\**" />
-    <EmbeddedResource Remove="Containers\Specialized\**" />
-    <None Remove="Containers\Specialized\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

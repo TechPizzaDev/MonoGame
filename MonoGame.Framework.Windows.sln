@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29519.181
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36202.13 d17.14
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Framework.Windows", "MonoGame.Framework\MonoGame.Framework.Windows.csproj", "{888F236E-6309-4E7A-9045-FC6AB1617565}"
 EndProject
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Imaging.Sandbox", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.StbSharp", "MonoGame.StbSharp\MonoGame.StbSharp.csproj", "{CE2CF7F2-CE66-40A6-8076-71D7E03E39AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NVorbis", "ThirdParty\NVorbis\NVorbis\NVorbis.csproj", "{A334B6A6-F6A9-44BC-A019-EF8F7F10983F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NVorbis", "ThirdParty\VorbisPizza\NVorbis\NVorbis.csproj", "{A334B6A6-F6A9-44BC-A019-EF8F7F10983F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame.Testing", "MonoGame.Testing\MonoGame.Testing.csproj", "{A2AD7D4A-2737-4F92-A5F3-DF837AD3973A}"
 EndProject

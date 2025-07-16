@@ -8,6 +8,7 @@
     <Compile Include="Platform\Audio\AudioLoader.NVorbis.cs" />
     <Compile Include="Platform\Audio\DynamicSoundEffectInstance.OpenAL.cs" />
     <Compile Include="Platform\Audio\Microphone.OpenAL.cs" />
+    <Compile Include="Platform\Media\Song.NVorbis.cs" />
     <Compile Include="Platform\Audio\SoundEffect.OpenAL.cs" />
     <Compile Include="Platform\Audio\SoundEffectInstance.OpenAL.cs" />
     <Compile Include="Platform\Audio\OpenAL\**" />

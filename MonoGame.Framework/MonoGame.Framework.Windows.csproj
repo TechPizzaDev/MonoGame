@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <DefineConstants>WINDOWS;XNADESIGNPROVIDED;NVORBIS</DefineConstants>
+    <TargetFrameworks>net9.0-windows</TargetFrameworks>
+    <DefineConstants>WINDOWS;XNADESIGNPROVIDED</DefineConstants>
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
@@ -19,33 +19,16 @@
   
   <ItemGroup>
     <Compile Remove="Android\**" />
-    <Compile Remove="bin\**" />
-    <Compile Remove="obj\**" />
     <Compile Remove="Platform\**\*" />
-    <Compile Remove="Properties\**\*" />
     <EmbeddedResource Remove="Android\**" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Android\**" />
-    <None Remove="bin\**" />
-    <None Remove="obj\**" />
     <None Remove="Platform\**\*" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Platform\Audio\AudioLoader.cs" />
-    <Compile Include="Platform\Audio\AudioLoader.NVorbis.cs" />
-    <Compile Include="Platform\Audio\Microphone.OpenAL.cs" />
-    <Compile Include="Platform\Audio\OpenAL\ALBuffer.cs" />
-    <Compile Include="Platform\Audio\OpenAL\ALBufferPool.cs" />
-    <Compile Include="Platform\Audio\OpenAL\ALController.cs" />
-    <Compile Include="Platform\Audio\OpenAL\ALHelper.cs" />
-    <Compile Include="Platform\Audio\OpenAL\OpenAL.ALC.cs" />
-    <Compile Include="Platform\Audio\OpenAL\OpenAL.cs" />
-    <Compile Include="Platform\Audio\OpenAL\OpenAL.Efx.cs" />
-    <Compile Include="Platform\Audio\OpenAL\OpenAL.Enums.cs" />
-    <Compile Include="Platform\Audio\OpenAL\OpenAL.XRam.cs" />
     <Compile Include="Platform\GamePlatform.Desktop.cs" />
     <Compile Include="Platform\Graphics\Shader\Shader.Structure.cs" />
     <Compile Include="Platform\Input\GamePad.XInput.cs" />
@@ -59,9 +42,7 @@
     <Compile Include="Platform\Input\Touch\TouchPanelCapabilities.Windows.cs" />
 
     <Compile Include="Platform\Media\MediaManagerState.cs" />
-    <Compile Include="Platform\Media\OggStream.cs" />
-    <Compile Include="Platform\Media\OggStreamer.cs" />
-    <Compile Include="Platform\Media\Song.NVorbis.cs" />
+    <Compile Include="Platform\Media\Song.Default.cs" />
     <Compile Include="Platform\Media\Video.WMS.cs" />
     <Compile Include="Platform\Media\VideoPlayer.WMS.cs" />
     <Compile Include="Platform\Media\VideoSampleGrabber.cs" />
@@ -78,18 +59,11 @@
     <Compile Include="Platform\Windows\WinFormsGamePlatform.cs" />
     <Compile Include="Platform\Windows\WinFormsGameWindow.cs" />
     <Compile Include="Platform\ThreadHelper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     
-    <Compile Remove="Audio\AudioUtil.cs" />
     <Compile Remove="Media\SongCollection.cs" />
-    <Compile Remove="Media\SongPart.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Version="4.0.1" Include="SharpDX" />
     <PackageReference Version="4.0.1" Include="SharpDX.Direct2D1" />
     <PackageReference Version="4.0.1" Include="SharpDX.Direct3D11" />
@@ -102,7 +76,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MonoGame.Imaging\MonoGame.Imaging.csproj" />
     <ProjectReference Include="..\MonoGame.Utilities\MonoGame.Utilities.csproj" />
-    <ProjectReference Include="..\ThirdParty\NVorbis\NVorbis\NVorbis.csproj" />
   </ItemGroup>
 
   <Import Project="Platform\DirectX.targets" />

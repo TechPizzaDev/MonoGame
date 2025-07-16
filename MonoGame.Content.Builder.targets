@@ -33,7 +33,7 @@
 
     <PropertyGroup>
       <MGCBExe Condition="'$(MGCBExe)' == ''">$(MSBuildThisFileDirectory)Tools\MGCB.exe</MGCBExe>
-      <MGCBCommand>&quot;$(MGCBExe)&quot;</MGCBCommand>
+      <MGCBCommand Condition="'$(MGCBCommand)' == ''">&quot;$(MGCBExe)&quot;</MGCBCommand>
     </PropertyGroup>
 
   </Target>

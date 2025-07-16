@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(MSBuildExtensionsPath)\MonoGame\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\MonoGame.Common.props')" />
+  <Import Project="..\MonoGame.Common.props" Condition="Exists('..\MonoGame.Common.props')" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,25 +11,21 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon />
     <StartupObject />
+    <MGCBCommand>mgcb</MGCBCommand>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="GameHead - copy.cs" />
-    <Compile Remove="GameHead - vector drawing.cs" />
-  </ItemGroup>
 
   <Choose>    
     <When Condition="'$(SolutionName)' == 'MonoGame.Framework.DesktopGL'">
       <PropertyGroup>
         <MonoGamePlatform>DesktopGL</MonoGamePlatform>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFrameworks>net9.0</TargetFrameworks>
       </PropertyGroup>
     </When>
     
     <When Condition="'$(SolutionName)' == 'MonoGame.Framework.Windows'">
       <PropertyGroup>
         <MonoGamePlatform>Windows</MonoGamePlatform>
-        <TargetFramework>net5.0-windows</TargetFramework>
+        <TargetFrameworks>net9.0-windows</TargetFrameworks>
       </PropertyGroup>
     </When>
   </Choose>
@@ -107,11 +103,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -124,6 +116,6 @@
     </None>
   </ItemGroup>
 
-  <Import Project="$(MSBuildExtensionsPath)\MonoGame\MonoGame.Content.Builder.targets" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\MonoGame.Content.Builder.targets')" />
+  <Import Project="..\MonoGame.Content.Builder.targets" Condition="Exists('..\MonoGame.Content.Builder.targets')" />
 
 </Project>

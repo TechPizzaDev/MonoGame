@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
-namespace MonoGame.Framework.Collections
+namespace System.Collections.Generic;
+
+public static class SetExtensions
 {
-    public static class SetExtensions
+#if !NET10_0_OR_GREATER
+    public static ReadOnlySet<T> AsReadOnly<T>(this ISet<T> set)
     {
-        public static ReadOnlySet<T> AsReadOnly<T>(this IReadOnlySet<T> set)
-        {
-            return new ReadOnlySet<T>(set);
-        }
+        return new ReadOnlySet<T>(set);
     }
+#endif
 }

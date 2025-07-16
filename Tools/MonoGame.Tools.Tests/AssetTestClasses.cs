@@ -4,12 +4,13 @@
 
 using System;
 using System.Collections;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Content.Pipeline;
-using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
-using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Framework;
+using MonoGame.Framework.Content;
+using MonoGame.Framework.Content.Pipeline;
+using MonoGame.Framework.Content.Pipeline.Graphics;
+using MonoGame.Framework.Graphics;
 using System.Collections.Generic;
+using System.Numerics;
 
 #region The Basics
 public class TheBasics
@@ -246,7 +247,7 @@ public class MathTypes
     public Vector4 Vector4;
     public Quaternion Quaternion;
     public Plane Plane;
-    public Matrix Matrix;
+    public Matrix4x4 Matrix;
     public Color Color;
     public Vector2[] Vector2Array = new Vector2[0];
     public List<Vector2> Vector2List = new List<Vector2>();

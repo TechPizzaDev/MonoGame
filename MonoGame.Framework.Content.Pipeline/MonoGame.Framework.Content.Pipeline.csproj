@@ -3,7 +3,7 @@
   <Import Project="..\MonoGame.props" />
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <BaseOutputPath>..\Artifacts\MonoGame.Framework.Content.Pipeline</BaseOutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -44,14 +44,6 @@
     <Reference Include="PVRTexLibNET">
       <HintPath>..\ThirdParty\Dependencies\PVRTexLibNET\PVRTexLibNET.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -219,19 +211,19 @@
     <!-- NuGet warns if we copy assemblies but don't reference them; we suppress those warnings. -->
     <NoWarn>NU5100</NoWarn>
   </PropertyGroup>
-  
+
+  <!--
   <ItemGroup>
     <Content Include="..\Artifacts\MonoGame.Effect.Compiler\$(Configuration)\*" Exclude="..\Artifacts\MonoGame.Effect.Compiler\$(Configuration)\*.nupkg" Visible="false">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  -->
   
   <Import Project="..\Stadia\MonoGame.Framework.Content.Pipeline.targets" Condition="exists('..\Stadia\MonoGame.Framework.Content.Pipeline.targets')" />
 
   <ItemGroup>
-    <ProjectReference Include="..\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />
-    <ProjectReference Include="..\MonoGame.Imaging\MonoGame.Imaging.csproj" />
-    <ProjectReference Include="..\MonoGame.Utilities\MonoGame.Utilities.csproj" />
+    <ProjectReference Include="..\MonoGame.Framework\MonoGame.Framework.Windows.csproj" />
   </ItemGroup>
 
 </Project>
