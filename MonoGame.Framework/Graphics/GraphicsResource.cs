@@ -99,7 +99,7 @@ namespace MonoGame.Framework.Graphics
                     $"You cannot bind a default {GetType().Name} object.");
             }
 
-            if (GraphicsDevice != null && GraphicsDevice != device)
+            if (_graphicsDevice != null && _graphicsDevice != device)
             {
                 Throw();
                 void Throw() => ThrowHelper.InvalidOperation(
@@ -118,7 +118,7 @@ namespace MonoGame.Framework.Graphics
                     $"You cannot modify a default {GetType().Name} object.");
             }
 
-            if (GraphicsDevice != null)
+            if (_graphicsDevice != null)
             {
                 Throw();
                 void Throw() => ThrowHelper.InvalidOperation(

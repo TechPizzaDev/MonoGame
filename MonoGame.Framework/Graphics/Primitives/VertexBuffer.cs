@@ -25,9 +25,7 @@ namespace MonoGame.Framework.Graphics
             bool isDynamic) :
             base(graphicsDevice, capacity, bufferUsage, isDynamic)
         {
-            // Make sure the graphics device is assigned in the vertex declaration.
-            if (vertexDeclaration.GraphicsDevice != graphicsDevice)
-                vertexDeclaration.GraphicsDevice = graphicsDevice;
+            vertexDeclaration.BindToGraphicsDevice(graphicsDevice);
 
             VertexDeclaration = vertexDeclaration;
 
