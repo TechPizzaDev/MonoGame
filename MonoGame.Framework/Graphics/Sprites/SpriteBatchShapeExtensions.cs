@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using MonoGame.Framework.Graphics;
 
 namespace MonoGame.Framework
@@ -10,16 +11,25 @@ namespace MonoGame.Framework
     /// </summary>
     public static class SpriteBatchShapeExtensions
     {
-        private static Texture2D _whitePixelTexture;
+        private static Texture2D? _whitePixelTexture;
 
         public static Texture2D GetWhitePixelTexture(GraphicsDevice graphicsDevice)
         {
-            if (_whitePixelTexture == null)
+            var texture = _whitePixelTexture;
+            if (texture == null)
             {
-                _whitePixelTexture = new Texture2D(graphicsDevice, 1, 1, false, SurfaceFormat.Rgba32);
-                _whitePixelTexture.SetData(stackalloc[] { Color.White });
+                texture = CreateWhitePixelTexture(graphicsDevice);
+                _whitePixelTexture = texture;
             }
-            return _whitePixelTexture;
+            return texture;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static Texture2D CreateWhitePixelTexture(GraphicsDevice graphicsDevice)
+        {
+            var texture = new Texture2D(graphicsDevice, 1, 1, false, SurfaceFormat.Rgba32);
+            texture.SetData(stackalloc[] { Color.White });
+            return texture;
         }
 
         /// <summary>
