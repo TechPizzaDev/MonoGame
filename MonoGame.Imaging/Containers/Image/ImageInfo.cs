@@ -20,5 +20,12 @@ namespace MonoGame.Imaging
             ComponentInfo = componentInfo;
             Format = format;
         }
+
+        public override string ToString()
+        {
+            VectorComponentInfo info = ComponentInfo;
+            string withAlpha = info.HasComponentType(VectorComponentChannel.Alpha) ? "with alpha" : "";
+            return $"{Format.ShortName} {Width}x{Height} {info.BitDepth}bit {withAlpha}";
+        }
     }
 }

@@ -9,11 +9,14 @@ namespace MonoGame.Imaging
         public TimeSpan MinimumAnimationDelay { get; }
 
         public AnimatedImageFormat(
-            string fullName, string shortName,
-            IReadOnlySet<string> mimeTypes,
-            IReadOnlySet<string> extensions,
+            string fullName, 
+            string shortName,
+            string? mimeType, 
+            string? extension,
+            IEnumerable<string> mimeTypes,
+            IEnumerable<string> extensions,
             TimeSpan minimumAnimationDelay) :
-            base(fullName, shortName, mimeTypes, extensions)
+            base(fullName, shortName, mimeType, extension, mimeTypes, extensions)
         {
             MinimumAnimationDelay = minimumAnimationDelay.Duration();
         }

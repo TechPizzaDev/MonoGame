@@ -3,7 +3,7 @@ using MonoGame.Imaging.Coders.Decoding;
 
 namespace MonoGame.Imaging.Coders.Detection
 {
-    public abstract class StbImageFormatDetectorBase  : IImageFormatDetector
+    public abstract class StbImageFormatDetectorBase : IImageFormatDetector
     {
         public abstract ImageFormat Format { get; }
         public abstract int HeaderSize { get; }

@@ -6,10 +6,13 @@ namespace MonoGame.Imaging
     public class LayeredImageFormat : ImageFormat, ILayeredFormatAttribute
     {
         public LayeredImageFormat(
-            string fullName, string shortName,
-            IReadOnlySet<string> mimeTypes,
-            IReadOnlySet<string> extensions) :
-            base(fullName, shortName, mimeTypes, extensions)
+            string fullName, 
+            string shortName,
+            string? mimeType,
+            string? extension,
+            IEnumerable<string> mimeTypes,
+            IEnumerable<string> extensions) :
+            base(fullName, shortName, mimeType, extension, mimeTypes, extensions)
         {
         }
     }

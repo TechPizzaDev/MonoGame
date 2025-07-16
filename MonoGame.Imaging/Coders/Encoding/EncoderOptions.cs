@@ -7,12 +7,8 @@ namespace MonoGame.Imaging
     /// Base class for encoder options.
     /// </summary>
     [Serializable]
-    public class EncoderOptions : CoderOptions
+    public class EncoderOptions : CoderOptions, ICoderOptions<EncoderOptions>
     {
-        public static new EncoderOptions Default { get; } = new DefaultEncoderOptions();
-
-        private class DefaultEncoderOptions : EncoderOptions
-        {
-        }
+        public static new EncoderOptions Default { get; } = new();
     }
 }

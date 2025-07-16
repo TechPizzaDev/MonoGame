@@ -7,9 +7,9 @@ namespace MonoGame.Imaging
     /// Base class for decoder options.
     /// </summary>
     [Serializable]
-    public class DecoderOptions : CoderOptions
+    public class DecoderOptions : CoderOptions, ICoderOptions<DecoderOptions>
     {
-        public static new DecoderOptions Default { get; } = new DefaultDecoderOptions();
+        public static new DecoderOptions Default { get; } = new();
 
         /// <summary>
         /// Gets or sets whether image memory should be 
@@ -24,10 +24,6 @@ namespace MonoGame.Imaging
         public DecoderOptions()
         {
             ClearImageMemory = true;
-        }
-
-        private class DefaultDecoderOptions : DecoderOptions
-        {
         }
     }
 }

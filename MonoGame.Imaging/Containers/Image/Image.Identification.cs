@@ -41,9 +41,7 @@ namespace MonoGame.Imaging
             using var prefixedStream = config.CreateStreamWithHeaderPrefix(stream);
             Memory<byte> prefix = prefixedStream.GetPrefix(cancellationToken);
 
-            ImageFormat? format = DetectFormat(config, prefix.Span);
-            if (format == null)
-                throw new UnknownImageFormatException();
+            ImageFormat? format = DetectFormat(config, prefix.Span) ?? throw new UnknownImageFormatException();
 
             var infoDetector = config.GetInfoDetector(format);
             return infoDetector.Identify(config, prefixedStream, cancellationToken);

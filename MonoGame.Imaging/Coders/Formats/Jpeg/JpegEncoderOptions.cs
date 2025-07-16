@@ -3,8 +3,10 @@
 namespace MonoGame.Imaging.Coders.Formats.Jpeg
 {
     [Serializable]
-    public class JpegEncoderOptions : EncoderOptions
+    public class JpegEncoderOptions : EncoderOptions, ICoderOptions<JpegEncoderOptions>
     {
+        public static new JpegEncoderOptions Default { get; } = new();
+
         public int Quality { get; }
         public JpegSubsampling Subsampling { get; }
         

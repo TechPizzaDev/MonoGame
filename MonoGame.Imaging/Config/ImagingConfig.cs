@@ -21,25 +21,23 @@ namespace MonoGame.Imaging
         /// Gets the default <see cref="ImagingConfig"/>,
         /// often used for methods that don't take it as an argument.
         /// </summary>
-        public static ImagingConfig Default { get; } = new ImagingConfig();
+        public static ImagingConfig Default { get; } = new();
 
         public ImagingConfig()
         {
-            _modules = new Dictionary<Type, object>();
-
             // TODO: improve this
 
             var decoders = new ImageCoderProvider<IImageDecoder>();
-            decoders.TryAddFactory(ImageFormat.Bmp, (stream, options) => 
+            decoders.TryAddFactory(ImageFormat.Bmp, (stream, options) =>
                 new BmpImageDecoder(this, stream, CheckCoderOptions<DecoderOptions>(options)));
-            
-            decoders.TryAddFactory(ImageFormat.Tga, (stream, options) => 
+
+            decoders.TryAddFactory(ImageFormat.Tga, (stream, options) =>
                 new TgaImageDecoder(this, stream, CheckCoderOptions<DecoderOptions>(options)));
-            
-            decoders.TryAddFactory(ImageFormat.Png, (stream, options) => 
+
+            decoders.TryAddFactory(ImageFormat.Png, (stream, options) =>
                 new PngImageDecoder(this, stream, CheckCoderOptions<DecoderOptions>(options)));
-            
-            decoders.TryAddFactory(ImageFormat.Jpeg, (stream, options) => 
+
+            decoders.TryAddFactory(ImageFormat.Jpeg, (stream, options) =>
                 new JpegImageDecoder(this, stream, CheckCoderOptions<DecoderOptions>(options)));
 
 
@@ -67,22 +65,26 @@ namespace MonoGame.Imaging
             formatDetectors.TryAdd(ImageFormat.Jpeg, new JpegImageFormatDetector());
 
 
+            var infoDetectors = new ImagingInstanceProvider<IImageInfoDetector>();
+            infoDetectors.TryAdd(ImageFormat.Bmp, new BmpImageInfoDetector());
+            infoDetectors.TryAdd(ImageFormat.Tga, new TgaImageInfoDetector());
+            infoDetectors.TryAdd(ImageFormat.Png, new PngImageInfoDetector());
+            infoDetectors.TryAdd(ImageFormat.Jpeg, new JpegImageInfoDetector());
+
+
             _modules.Add(decoders.GetType(), decoders);
             _modules.Add(encoders.GetType(), encoders);
             _modules.Add(formatDetectors.GetType(), formatDetectors);
+            _modules.Add(infoDetectors.GetType(), infoDetectors);
         }
 
-        [return: NotNullIfNotNull("options")]
-        public static TOptions? CheckCoderOptions<TOptions>(CoderOptions? options)
-           where TOptions : CoderOptions
+        public static T CheckCoderOptions<T>(CoderOptions? options)
+           where T : ICoderOptions<T>
         {
             if (options == null)
-                return null;
+                return T.Default;
 
-            if (typeof(TOptions).IsAssignableFrom(options.GetType()))
-                return (TOptions)options;
-
-            throw new ArgumentException("", nameof(options));
+            return (T) (object) options;
         }
 
         public bool TryGetModule<T>([MaybeNullWhen(false)] out T value) where T : class

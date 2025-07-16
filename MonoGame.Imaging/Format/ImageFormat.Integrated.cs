@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MonoGame.Framework.Collections;
+using System.Diagnostics;
 
 namespace MonoGame.Imaging
 {
@@ -15,67 +15,72 @@ namespace MonoGame.Imaging
         /// </summary>
         public static ImageFormat Png { get; } = AddIntegrated(
             "Portable Network Graphics", "PNG",
-            new[] { "image/png" },
-            new[] { ".png" });
+            ["image/png"],
+            [".png"]);
 
         /// <summary> 
         /// Gets the "Joint Photographic Experts Group" (JPEG) format. 
         /// </summary>
         public static ImageFormat Jpeg { get; } = AddIntegrated(
             "Joint Photographic Experts Group", "JPEG",
-            new[] { "image/jpeg", "image/pjpeg" },
-            new[] { ".jpeg", ".jpg", ".jfif", ".jpe", ".jif" });
+            ["image/jpeg", "image/pjpeg"],
+            [".jpeg", ".jpg", ".jfif", ".jpe", ".jif"]);
 
         /// <summary>
         /// Gets the "Graphics Interchange Format" (GIF).
         /// </summary>
-        public static AnimatedImageFormat Gif { get; } = new AnimatedImageFormat(
+        public static ImageFormat Gif { get; } = AddIntegrated(new AnimatedImageFormat(
             "Graphics Interchange Format", "GIF",
-            new HashSet<string> { "image/gif" }.AsReadOnly(),
-            new HashSet<string> { ".gif" }.AsReadOnly(),
-            TimeSpan.FromSeconds(0.01));
+            "image/gif",
+            ".gif",
+            [], [],
+            TimeSpan.FromSeconds(0.01)));
 
         /// <summary>
         /// Gets the "Bitmap" (BMP) format.
         /// </summary>
         public static ImageFormat Bmp { get; } = AddIntegrated(
             "Bitmap", "BMP",
-            new[] { "image/bmp", "image/x-bmp", "image/x-windows-bmp" },
-            new[] { ".bmp", ".bm", ".dip" });
+            ["image/bmp", "image/x-bmp", "image/x-windows-bmp"],
+            [".bmp", ".bm", ".dip"]);
 
         /// <summary>
         /// Gets the "Truevision Graphics Adapter" (TGA) format.
         /// </summary>
         public static ImageFormat Tga { get; } = AddIntegrated(
             "Truevision Graphics Adapter", "TGA",
-            new[] { "image/x-tga", "image/x-targa" },
-            new[] { ".tga", ".icb", ".vda", ".vst" });
+            ["image/x-tga", "image/x-targa"],
+            [".tga", ".icb", ".vda", ".vst"]);
 
         /// <summary>
         /// Gets the "RGBE" format (also known as "Radiance HDR").
         /// </summary>
         public static ImageFormat Rgbe { get; } = AddIntegrated(
             "Radiance HDR", "RGBE",
-            new[] { "image/vnd.radiance", "image/x-hdr" },
-            new[] { ".hdr", ".rgbe" });
+            ["image/vnd.radiance", "image/x-hdr"],
+            [".hdr", ".rgbe"]);
 
         /// <summary>
         /// Gets the "PhotoShop Document" (PSD) format.
         /// </summary>
-        public static ImageFormat Psd { get; } = new LayeredImageFormat(
+        public static ImageFormat Psd { get; } = AddIntegrated(new LayeredImageFormat(
             "PhotoShop Document", "PSD",
-            new HashSet<string> { "image/vnd.adobe.photoshop", "application/x-photoshop" }.AsReadOnly(),
-            new HashSet<string> { ".psd" }.AsReadOnly());
+            "image/vnd.adobe.photoshop",
+            ".psd",
+            ["application/x-photoshop"], []));
 
         #endregion
 
         static ImageFormat()
         {
-            AddFormat(Gif);
-            _integratedFormats.Add(Gif);
+            foreach (ImageFormat format in _integratedFormats)
+            {
+                bool added = _formats.Add(format);
+                Debug.Assert(added);
 
-            AddFormat(Psd);
-            _integratedFormats.Add(Psd);
+                AddToDictionary(_byMimeType, format.MimeTypes, format);
+                AddToDictionary(_byExtension, format.Extensions, format);
+            }
         }
 
         /// <summary>
@@ -93,15 +98,13 @@ namespace MonoGame.Imaging
         private static ImageFormat AddIntegrated(
             string fullName, string name, string[] mimeTypes, string[] extensions)
         {
-            var mimeSet = new ReadOnlySet<string>(mimeTypes, StringComparer.OrdinalIgnoreCase);
-            var extensionSet = new ReadOnlySet<string>(extensions, StringComparer.OrdinalIgnoreCase);
+            return AddIntegrated(new ImageFormat(
+                fullName, name, mimeTypes[0], extensions[0], mimeTypes, extensions));
+        }
 
-            var format = new ImageFormat(
-                fullName, name,
-                mimeTypes[0], extensions[0], mimeSet, extensionSet);
-
+        private static ImageFormat AddIntegrated(ImageFormat format)
+        {
             _integratedFormats.Add(format);
-            AddFormat(format);
             return format;
         }
     }

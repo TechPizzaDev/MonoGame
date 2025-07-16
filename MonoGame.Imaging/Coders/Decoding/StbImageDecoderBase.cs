@@ -13,9 +13,9 @@ using StbSharp.ImageRead;
 namespace MonoGame.Imaging.Coders.Decoding
 {
     public abstract partial class StbImageDecoderBase<TOptions> : IImageDecoder, IProgressReportingCoder<IImageDecoder>
-        where TOptions : DecoderOptions, new()
+        where TOptions : DecoderOptions
     {
-        private readonly object _progressMutex = new object();
+        private readonly object _progressMutex = new();
         private ImagingProgressCallback<IImageDecoder>? _progress;
         private ReadProgressCallback? _readProgress;
 
@@ -75,10 +75,10 @@ namespace MonoGame.Imaging.Coders.Decoding
         public abstract ImageFormat Format { get; }
 
         public StbImageDecoderBase(
-            IImagingConfig config, Stream stream, TOptions? decoderOptions)
+            IImagingConfig config, Stream stream, TOptions decoderOptions)
         {
             ImagingConfig = config ?? throw new ArgumentNullException(nameof(config));
-            DecoderOptions = decoderOptions ?? new();
+            DecoderOptions = decoderOptions ?? throw new ArgumentNullException(nameof(decoderOptions));
 
             byte[] buffer = RecyclableMemoryManager.Default.GetBlock();
             Reader = new ImageBinReader(stream, buffer);

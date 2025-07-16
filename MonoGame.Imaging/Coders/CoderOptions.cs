@@ -6,8 +6,8 @@ namespace MonoGame.Imaging.Coders
     /// Base class for coder options.
     /// </summary>
     [Serializable]
-    public class CoderOptions
+    public class CoderOptions : ICoderOptions<CoderOptions>
     {
-        public static CoderOptions Default { get; } = new CoderOptions();
+        public static CoderOptions Default { get; } = new();
     }
 }
