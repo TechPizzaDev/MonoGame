@@ -801,7 +801,7 @@ namespace MonoGame.Framework.Memory
             try
             {
                 result = GetMemoryStream(tag);
-                stream.StackCopyTo(result);
+                stream.CopyTo(result);
                 result.Position = 0;
                 return result;
             }
