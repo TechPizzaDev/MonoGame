@@ -88,25 +88,25 @@ namespace MonoGame.Framework.Input
 
             var capabilities = controller.GetCapabilities(DeviceQueryType.Any);
             var buttons = capabilities.Gamepad.Buttons;
-            bool hasForceFeedback = capabilities.Flags.HasFlags(CapabilityFlags.FfbSupported);
+            bool hasForceFeedback = (capabilities.Flags & CapabilityFlags.FfbSupported) != 0;
 
             return new GamePadCapabilities(
                 // digital buttons
-                hasAButton: buttons.HasFlags(GBF.A),
-                hasBackButton: buttons.HasFlags(GBF.Back),
-                hasBButton: buttons.HasFlags(GBF.B),
+                hasAButton: (buttons & GBF.A) != 0,
+                hasBackButton: (buttons & GBF.Back) != 0,
+                hasBButton: (buttons & GBF.B) != 0,
                 hasBigButton: false, // TODO: what IS this? Is it related to amePadType.BigGamePad?
-                hasDPadDownButton: buttons.HasFlags(GBF.DPadDown),
-                hasDPadLeftButton: buttons.HasFlags(GBF.DPadLeft),
-                hasDPadRightButton: buttons.HasFlags(GBF.DPadRight),
-                hasDPadUpButton: buttons.HasFlags(GBF.DPadUp),
-                hasLeftShoulderButton: buttons.HasFlags(GBF.LeftShoulder),
-                hasLeftStickButton: buttons.HasFlags(GBF.LeftThumb),
-                hasRightShoulderButton: buttons.HasFlags(GBF.RightShoulder),
-                hasRightStickButton: buttons.HasFlags(GBF.RightThumb),
-                hasStartButton: buttons.HasFlags(GBF.Start),
-                hasXButton: buttons.HasFlags(GBF.X),
-                hasYButton: buttons.HasFlags(GBF.Y),
+                hasDPadDownButton: (buttons & GBF.DPadDown) != 0,
+                hasDPadLeftButton: (buttons & GBF.DPadLeft) != 0,
+                hasDPadRightButton: (buttons & GBF.DPadRight) != 0,
+                hasDPadUpButton: (buttons & GBF.DPadUp) != 0,
+                hasLeftShoulderButton: (buttons & GBF.LeftShoulder) != 0,
+                hasLeftStickButton: (buttons & GBF.LeftThumb) != 0,
+                hasRightShoulderButton: (buttons & GBF.RightShoulder) != 0,
+                hasRightStickButton: (buttons & GBF.RightThumb) != 0,
+                hasStartButton: (buttons & GBF.Start) != 0,
+                hasXButton: (buttons & GBF.X) != 0,
+                hasYButton: (buttons & GBF.Y) != 0,
 
                 // analog controls
                 hasRightTrigger: capabilities.Gamepad.RightTrigger > 0,
@@ -130,7 +130,7 @@ namespace MonoGame.Framework.Input
                 identifier: null,
                 isConnected: controller.IsConnected,
                 gamePadType: DeviceSubTypeToGamePadType(capabilities.SubType),
-                hasVoiceSupport: capabilities.Flags.HasFlags(CapabilityFlags.VoiceSupported));
+                hasVoiceSupport: (capabilities.Flags & CapabilityFlags.VoiceSupported) != 0);
         }
 
         private static GamePadState GetDefaultState()
@@ -263,9 +263,9 @@ namespace MonoGame.Framework.Input
             {
                 var vibration = new Vibration
                 {
-                        LeftMotorSpeed = (ushort)(leftMotor * ushort.MaxValue),
-                        RightMotorSpeed = (ushort)(rightMotor * ushort.MaxValue),
-                    };
+                    LeftMotorSpeed = (ushort)(leftMotor * ushort.MaxValue),
+                    RightMotorSpeed = (ushort)(rightMotor * ushort.MaxValue),
+                };
                 result = _controllers[index].SetVibration(vibration);
             }
             catch (SharpDX.SharpDXException ex)

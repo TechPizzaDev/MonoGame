@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace MonoGame.Framework.Input
 {
@@ -39,22 +40,22 @@ namespace MonoGame.Framework.Input
         /// <summary>
         /// Gets the state of the Caps Lock key.
         /// </summary>
-        public readonly bool CapsLock => Modifiers.HasAnyFlag(KeyModifiers.CapsLock);
+        public readonly bool CapsLock => (Modifiers & KeyModifiers.CapsLock) != 0;
 
         /// <summary>
         /// Gets the state of the Num Lock key.
         /// </summary>
-        public readonly bool NumLock => Modifiers.HasAnyFlag(KeyModifiers.NumLock);
+        public readonly bool NumLock => (Modifiers & KeyModifiers.NumLock) != 0;
 
         /// <summary>
         /// Gets the combined state of left and right Control key.
         /// </summary>
-        public readonly bool Control => Modifiers.HasAnyFlag(KeyModifiers.Control);
+        public readonly bool Control => (Modifiers & KeyModifiers.Control) != 0;
 
         /// <summary>
         /// Gets the combined state of left and right Alt key.
         /// </summary>
-        public readonly bool Alt => Modifiers.HasAnyFlag(KeyModifiers.Alt);
+        public readonly bool Alt => (Modifiers & KeyModifiers.Alt) != 0;
 
         /// <summary>
         /// Gets the amount of pressed keys.
@@ -63,17 +64,15 @@ namespace MonoGame.Framework.Input
         {
             get
             {
-                static uint CountBits(uint v)
-                {
-                    // http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
-                    v -= (v >> 1) & 0x55555555;                    // reuse input as temporary
-                    v = (v & 0x33333333) + ((v >> 2) & 0x33333333);     // temp
-                    return ((v + (v >> 4) & 0xF0F0F0F) * 0x1010101) >> 24; // count
-                }
-
-                return (int)(
-                    CountBits(_key0) + CountBits(_key1) + CountBits(_key2) + CountBits(_key3) +
-                    CountBits(_key4) + CountBits(_key5) + CountBits(_key6) + CountBits(_key7));
+                return
+                    BitOperations.PopCount(_key0) +
+                    BitOperations.PopCount(_key1) +
+                    BitOperations.PopCount(_key2) +
+                    BitOperations.PopCount(_key3) +
+                    BitOperations.PopCount(_key4) +
+                    BitOperations.PopCount(_key5) +
+                    BitOperations.PopCount(_key6) +
+                    BitOperations.PopCount(_key7);
             }
         }
 

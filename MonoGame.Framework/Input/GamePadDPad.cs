@@ -110,10 +110,10 @@ namespace MonoGame.Framework.Input
         public override int GetHashCode()
         {
             return
-                (Down.ToBool() ? 1 : 2) +
-                (Left.ToBool() ? 4 : 8) +
-                (Right.ToBool() ? 16 : 32) +
-                (Up.ToBool() ? 64 : 128);
+                ((Down == ButtonState.Pressed) ? 1 : 2) +
+                ((Left == ButtonState.Pressed) ? 4 : 8) +
+                ((Right == ButtonState.Pressed) ? 16 : 32) +
+                ((Up == ButtonState.Pressed) ? 64 : 128);
         }
 
         /// <summary>

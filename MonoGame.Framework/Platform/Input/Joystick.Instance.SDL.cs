@@ -79,10 +79,10 @@ namespace MonoGame.Framework.Input
                     var hatstate = SDL.Joystick.GetHat(Device, i);
 
                     Hats[i] = new JoystickHat(
-                        up: hatstate.HasFlags(SDL.Joystick.Hat.Up) ? ButtonState.Pressed : ButtonState.Released,
-                        down: hatstate.HasFlags(SDL.Joystick.Hat.Down) ? ButtonState.Pressed : ButtonState.Released,
-                        left: hatstate.HasFlags(SDL.Joystick.Hat.Left) ? ButtonState.Pressed : ButtonState.Released,
-                        right: hatstate.HasFlags(SDL.Joystick.Hat.Right) ? ButtonState.Pressed : ButtonState.Released);
+                        up: (hatstate & SDL.Joystick.Hat.Up) != 0 ? ButtonState.Pressed : ButtonState.Released,
+                        down: (hatstate & SDL.Joystick.Hat.Down) != 0 ? ButtonState.Pressed : ButtonState.Released,
+                        left: (hatstate & SDL.Joystick.Hat.Left) != 0 ? ButtonState.Pressed : ButtonState.Released,
+                        right: (hatstate & SDL.Joystick.Hat.Right) != 0 ? ButtonState.Pressed : ButtonState.Released);
                 }
                 return Hats;
             }

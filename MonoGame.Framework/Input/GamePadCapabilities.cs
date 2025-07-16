@@ -22,13 +22,13 @@ namespace MonoGame.Framework.Input
         /// Gets the gamepad display name.
         /// This property is not available in XNA.
         /// </summary>
-        public string DisplayName { get; }
+        public string? DisplayName { get; }
 
         /// <summary>
         /// Gets the unique identifier of the gamepad.
         /// This property is not available in XNA.
         /// </summary>
-        public string Identifier { get; }
+        public string? Identifier { get; }
 
         /// <summary>
         /// Gets a value indicating whether the controller has the button A.
@@ -162,8 +162,8 @@ namespace MonoGame.Framework.Input
         /// </summary>
         public GamePadCapabilities(
             bool isConnected = false, 
-            string displayName = null, 
-            string identifier = null,
+            string? displayName = null, 
+            string? identifier = null,
             bool hasAButton = false, 
             bool hasBButton = false,
             bool hasBackButton = false,
@@ -276,7 +276,7 @@ namespace MonoGame.Framework.Input
         /// <summary>
         /// Returns the hash code of the <see cref="GamePadCapabilities"/>.
         /// </summary>
-        public override int GetHashCode() => Identifier.GetHashCode();
+        public override int GetHashCode() => Identifier?.GetHashCode() ?? DisplayName?.GetHashCode() ?? 0;
 
         /// <summary>
         /// Returns a string that represents the current <see cref="GamePadCapabilities"/>.

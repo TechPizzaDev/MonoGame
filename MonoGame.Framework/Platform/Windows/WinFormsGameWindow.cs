@@ -150,7 +150,7 @@ namespace MonoGame.Framework
             Form.Resize += OnResize;
             Form.ResizeBegin += OnResizeBegin;
             Form.ResizeEnd += OnResizeEnd;
-            
+
             Form.HandleCreated += OnHandleCreated;
             Form.HandleDestroyed += OnHandleDestroyed;
 
@@ -366,11 +366,11 @@ namespace MonoGame.Framework
 
             Mouse.State.X = pos.X;
             Mouse.State.Y = pos.Y;
-            Mouse.State.LeftButton = buttons.HasFlags(MouseButtons.Left) ? ButtonState.Pressed : ButtonState.Released;
-            Mouse.State.MiddleButton = buttons.HasFlags(MouseButtons.Middle) ? ButtonState.Pressed : ButtonState.Released;
-            Mouse.State.RightButton = buttons.HasFlags(MouseButtons.Right) ? ButtonState.Pressed : ButtonState.Released;
-            Mouse.State.XButton1 = buttons.HasFlags(MouseButtons.XButton1) ? ButtonState.Pressed : ButtonState.Released;
-            Mouse.State.XButton2 = buttons.HasFlags(MouseButtons.XButton2) ? ButtonState.Pressed : ButtonState.Released;
+            Mouse.State.LeftButton = (buttons & MouseButtons.Left) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            Mouse.State.MiddleButton = (buttons & MouseButtons.Middle) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            Mouse.State.RightButton = (buttons & MouseButtons.Right) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            Mouse.State.XButton1 = (buttons & MouseButtons.XButton1) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            Mouse.State.XButton2 = (buttons & MouseButtons.XButton2) != 0 ? ButtonState.Pressed : ButtonState.Released;
 
             // Don't process touch state if we're not active 
             // and the mouse is within the client area.

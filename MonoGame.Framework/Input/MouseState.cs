@@ -54,8 +54,8 @@ namespace MonoGame.Framework.Input
         /// </summary>
         public ButtonState LeftButton
         {
-            get => Buttons.HasFlags(MouseButton.Left) ? ButtonState.Pressed : ButtonState.Released;
-            internal set => Buttons = value.ToBool() ? Buttons | MouseButton.Left : Buttons & ~MouseButton.Left;
+            get => (Buttons & MouseButton.Left) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            internal set => Buttons = (value == ButtonState.Pressed) ? (Buttons | MouseButton.Left) : (Buttons & ~MouseButton.Left);
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace MonoGame.Framework.Input
         /// </summary>
         public ButtonState MiddleButton
         {
-            get => Buttons.HasFlags(MouseButton.Middle) ? ButtonState.Pressed : ButtonState.Released;
-            internal set => Buttons = value.ToBool() ? Buttons | MouseButton.Middle : Buttons & ~MouseButton.Middle;
+            get => (Buttons & MouseButton.Middle) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            internal set => Buttons = (value == ButtonState.Pressed) ? (Buttons | MouseButton.Middle) : (Buttons & ~MouseButton.Middle);
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace MonoGame.Framework.Input
         /// </summary>
         public ButtonState RightButton
         {
-            get => Buttons.HasFlags(MouseButton.Right) ? ButtonState.Pressed : ButtonState.Released;
-            internal set => Buttons = value.ToBool() ? Buttons | MouseButton.Right : Buttons & ~MouseButton.Right;
+            get => (Buttons & MouseButton.Right) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            internal set => Buttons = (value == ButtonState.Pressed) ? (Buttons | MouseButton.Right) : (Buttons & ~MouseButton.Right);
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace MonoGame.Framework.Input
         /// </summary>
         public ButtonState XButton1
         {
-            get => Buttons.HasFlags(MouseButton.X1) ? ButtonState.Pressed : ButtonState.Released;
-            internal set => Buttons = value.ToBool() ? Buttons | MouseButton.X1 : Buttons & ~MouseButton.X1;
+            get => (Buttons & MouseButton.X1) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            internal set => Buttons = (value == ButtonState.Pressed) ? (Buttons | MouseButton.X1) : (Buttons & ~MouseButton.X1);
         }
 
         /// <summary>
@@ -90,8 +90,8 @@ namespace MonoGame.Framework.Input
         /// </summary>
         public ButtonState XButton2
         {
-            get => Buttons.HasFlags(MouseButton.X2) ? ButtonState.Pressed : ButtonState.Released;
-            internal set => Buttons = value.ToBool() ? Buttons | MouseButton.X2 : Buttons & ~MouseButton.X2;
+            get => (Buttons & MouseButton.X2) != 0 ? ButtonState.Pressed : ButtonState.Released;
+            internal set => Buttons = (value == ButtonState.Pressed) ? (Buttons | MouseButton.X2) : (Buttons & ~MouseButton.X2);
         }
 
         #endregion
@@ -206,7 +206,7 @@ namespace MonoGame.Framework.Input
         /// </summary>
         public override readonly string ToString()
         {
-            return 
+            return
                 "{Buttons=" + Buttons +
                 ", X=" + X +
                 ", Y=" + Y +
