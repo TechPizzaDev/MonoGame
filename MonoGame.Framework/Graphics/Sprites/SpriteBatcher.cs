@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using MonoGame.Framework.Memory;
 
 namespace MonoGame.Framework.Graphics
 {
@@ -19,8 +19,6 @@ namespace MonoGame.Framework.Graphics
          */
 
         private const int InitialBatchSize = 256;
-
-        private const int BufferSizeGrowth = 256;
 
         /// <summary>
         /// The maximum number of batch items that can be 
@@ -58,7 +56,7 @@ namespace MonoGame.Framework.Graphics
             int minVertices = itemCount * 4; // 4 vertices per item
             if (_vertexBuffer == null || minVertices > _vertexBuffer.Capacity)
             {
-                _quadBuffer = GC.AllocateUninitializedArray<SpriteQuad>(minVertices, pinned: true);
+                _quadBuffer = new SpriteQuad[minVertices];
 
                 _vertexBuffer?.Dispose();
                 _vertexBuffer = new DynamicVertexBuffer(
@@ -70,7 +68,7 @@ namespace MonoGame.Framework.Graphics
             {
                 _indexBuffer?.Dispose();
                 _indexBuffer = new IndexBuffer(_device, IndexElementType.Int16, minIndices, BufferUsage.WriteOnly);
-                
+
                 // Use the quad buffer as a temporary buffer as it is always larger than the index buffer.
                 Span<ushort> indexSpan = MemoryMarshal.Cast<SpriteQuad, ushort>(_quadBuffer).Slice(0, minIndices);
 
@@ -88,34 +86,44 @@ namespace MonoGame.Framework.Graphics
                      */
 
                     // Triangle 1
-                    indexSpan[i + 0] = (ushort)(v + 0);
-                    indexSpan[i + 1] = (ushort)(v + 1);
-                    indexSpan[i + 2] = (ushort)(v + 2);
+                    indexSpan[i + 0] = (ushort) (v + 0);
+                    indexSpan[i + 1] = (ushort) (v + 1);
+                    indexSpan[i + 2] = (ushort) (v + 2);
 
                     // Triangle 2
-                    indexSpan[i + 3] = (ushort)(v + 1);
-                    indexSpan[i + 4] = (ushort)(v + 3);
-                    indexSpan[i + 5] = (ushort)(v + 2);
+                    indexSpan[i + 3] = (ushort) (v + 1);
+                    indexSpan[i + 4] = (ushort) (v + 3);
+                    indexSpan[i + 5] = (ushort) (v + 2);
                 }
 
                 _indexBuffer.SetData(indexSpan);
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public SpriteBatchItem GetBatchItem()
         {
-            if (_itemCount >= _batchItems.Length)
+            SpriteBatchItem[] items = _batchItems;
+            int size = _itemCount;
+            if ((uint) size < (uint) items.Length)
             {
-                int oldSize = _batchItems.Length;
-                int newSize = oldSize + oldSize / 2; // grow by x1.5
-                newSize = (newSize + BufferSizeGrowth - 1) & ~(BufferSizeGrowth - 1); // grow in chunks
-
-                Array.Resize(ref _batchItems, newSize);
-                for (int i = oldSize; i < newSize; i++)
-                    _batchItems[i] = new SpriteBatchItem();
-
-                SetupBuffers(Math.Min(newSize, MaxBatchSize));
+                _itemCount = size + 1;
+                return items[size];
             }
+            return GrowAndGetBatchItem();
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private SpriteBatchItem GrowAndGetBatchItem()
+        {
+            int oldSize = _batchItems.Length;
+            int newSize = oldSize * 2;
+
+            Array.Resize(ref _batchItems, newSize);
+            for (int i = oldSize; i < newSize; i++)
+                _batchItems[i] = new SpriteBatchItem();
+
+            SetupBuffers(Math.Min(newSize, MaxBatchSize));
             return _batchItems[_itemCount++];
         }
 
@@ -133,7 +141,8 @@ namespace MonoGame.Framework.Graphics
             }
 
             // nothing to do
-            if (_itemCount == 0)
+            Span<SpriteBatchItem> items = _batchItems.AsSpan(0, _itemCount);
+            if (items.Length == 0)
                 return;
 
             // sort the batch items
@@ -142,20 +151,16 @@ namespace MonoGame.Framework.Graphics
                 case SpriteSortMode.Texture:
                 case SpriteSortMode.FrontToBack:
                 case SpriteSortMode.BackToFront:
-                    Array.Sort(_batchItems, 0, _itemCount);
+                    items.Sort();
                     break;
             }
 
             // iterate through the batches, doing clamped sets of vertices at the time
             Span<SpriteQuad> quadBuffer = _quadBuffer.AsSpan();
-            int itemIndex = 0;
-            int itemsLeft = _itemCount;
 
-            while (itemsLeft > 0)
+            while (items.Length > 0)
             {
-                int itemsToProcess = itemsLeft;
-                if (itemsToProcess > MaxBatchSize)
-                    itemsToProcess = MaxBatchSize;
+                Span<SpriteBatchItem> batchItems = items.Slice(0, Math.Min(items.Length, MaxBatchSize));
 
                 int count = 0;
                 Texture2D? tex = null;
@@ -164,9 +169,9 @@ namespace MonoGame.Framework.Graphics
                 // (having such a path allows copying multiple items at once)
 
                 // draw the batches
-                for (int i = 0; i < itemsToProcess; i++, count++)
+                for (int i = 0; i < batchItems.Length; i++, count++)
                 {
-                    var item = _batchItems[itemIndex++];
+                    SpriteBatchItem item = batchItems[i];
 
                     // if the texture changed, we need to flush and bind the new texture
                     if (!ReferenceEquals(item.Texture, tex))
@@ -187,7 +192,7 @@ namespace MonoGame.Framework.Graphics
                 // flush the remaining data
                 FlushQuads(quadBuffer.Slice(0, count), effect, tex);
 
-                itemsLeft -= itemsToProcess;
+                items = items.Slice(batchItems.Length);
             }
 
             unchecked

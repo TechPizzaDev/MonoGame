@@ -4,7 +4,7 @@
 
 namespace MonoGame.Framework.Graphics
 {
-    public class DynamicIndexBuffer : IndexBuffer
+    public sealed class DynamicIndexBuffer : IndexBuffer
     {
         /// <summary>
         /// Special offset used internally by GraphicsDevice.DrawUserXXX() methods.

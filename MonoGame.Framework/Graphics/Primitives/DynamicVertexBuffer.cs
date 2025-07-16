@@ -9,7 +9,7 @@ using System;
 
 namespace MonoGame.Framework.Graphics
 {
-    public class DynamicVertexBuffer : VertexBuffer
+    public sealed class DynamicVertexBuffer : VertexBuffer
     {
         /// <summary>
         /// Special offset used internally by GraphicsDevice.DrawUserXXX() methods.
